@@ -12,23 +12,19 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 public class Crater extends Processor {
 
     public ElapsedTime runtime = new ElapsedTime();
-    TF1 tf = new TF1();
+    TF2 tf = new TF2();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         bot.init(hardwareMap);
         waitForStart();
-        tf.tfod.activate();
-
-
 
 
 
         while (opModeIsActive())
         {
             //getInitialPitch();
-
 
             descend();
             //analyze();

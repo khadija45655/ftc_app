@@ -3,19 +3,16 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
 import java.util.List;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
-/**
- * Created by khadija on 11/30/2018.
- */
-@TeleOp(name = "TF1", group = "tensor")
-public class TF1 extends LinearOpMode {
+
+@TeleOp(name = "TF2:Web", group = "TF")
+public class TF2 extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -44,7 +41,7 @@ public class TF1 extends LinearOpMode {
      * {@link #tfod} is the variable we will use to store our instance of the Tensor Flow Object
      * Detection engine.
      */
-    public TFObjectDetector tfod;
+    private TFObjectDetector tfod;
 
     @Override
     public void runOpMode() {
@@ -80,6 +77,7 @@ public class TF1 extends LinearOpMode {
                             int goldMineralX = -1;
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
+                            int pos = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                     goldMineralX = (int) recognition.getLeft();
@@ -91,12 +89,17 @@ public class TF1 extends LinearOpMode {
                             }
                             if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-
-                                    telemetry.addData("Gold Mineral Position", "Left");
+                                    telemetry.addData("Gold Mineral Position", 1);
+                                    telemetry.addData("Left","");
+                                    pos = 1;
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Right");
+                                    telemetry.addData("Gold Mineral Position", 3);
+                                    telemetry.addData("Right","");
+                                    pos = 3;
                                 } else {
-                                    telemetry.addData("Gold Mineral Position", "Center");
+                                    telemetry.addData("Gold Mineral Position", 2);
+                                    telemetry.addData("Center","");
+                                    pos = 2;
                                 }
                             }
                         }
@@ -114,14 +117,14 @@ public class TF1 extends LinearOpMode {
     /**
      * Initialize the Vuforia localization engine.
      */
-    public void initVuforia() {
+    private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -132,7 +135,7 @@ public class TF1 extends LinearOpMode {
     /**
      * Initialize the Tensor Flow Object Detection engine.
      */
-    public void initTfod() {
+    private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
