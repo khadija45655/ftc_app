@@ -30,8 +30,8 @@ public class Map {
     public DcMotor intakeMotor;
     public DcMotor liftMotor;
 
-    public Servo scoreServo;
-    //public Servo door;
+    public Servo bucketServo;
+    public Servo door;
     public Servo marker;
 
 
@@ -68,7 +68,7 @@ public class Map {
 
 
         //door = hwMap.servo.get("door");
-        scoreServo = hwMap.servo.get("scoreServo");
+        bucketServo = hwMap.servo.get("bucketServo");
         marker = hwMap.servo.get("marker");
 
         VuforiaLocalizer.Parameters vuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);

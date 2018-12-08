@@ -33,20 +33,33 @@ public class TFv1 extends Processor {
 
         while(opModeIsActive()){
             telemetry.addData("goldPosition was", goldPosition);// giving feedback
+            descend();
+            turn(90);
+            driveForward(15);
+
 
             switch (goldPosition){ // using for things in the autonomous program
                 case LEFT:
                     telemetry.addLine("going to the left");
-
+                    intakeOn();
+                    goAngle(15,30,2);
+                    intakeOff();
                     break;
                 case CENTER:
                     telemetry.addLine("going straight");
+                    intakeOn();
+                    driveForward(20);
+                    intakeOff();
                     break;
                 case RIGHT:
                     telemetry.addLine("going to the right");
+                    intakeOn();
+                    goAngle(15,30,2);
+                    intakeOff();
                     break;
                 case UNKNOWN:
                     telemetry.addLine("staying put");
+                    turn(720);
                     break;
             }
 
