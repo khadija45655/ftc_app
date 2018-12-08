@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector
 /**
  * Created by khadija on 12/7/2018.
  */
-class TFLite(private val master: masterVision) {
+class TFLite(private val master: masterV) {
     companion object {
         private const val TFOD_MODEL_ASSET = "RoverRuckus.tflite"
         private const val LABEL_GOLD_MINERAL = "Gold Mineral"
@@ -44,7 +44,7 @@ class TFLite(private val master: masterVision) {
                             silverMineral2X = recognition.left.toInt()
                     }
                     when (master.tfLiteAlgorithm) {
-                        masterVision.TFLiteAlgorithm.INFER_NONE  -> if (goldMineralX != null && silverMineral1X != null && silverMineral2X != null)
+                        masterV.TFLiteAlgorithm.INFER_NONE  -> if (goldMineralX != null && silverMineral1X != null && silverMineral2X != null)
                             if (updatedRecognitions.size == 3)
                                 lastKnownSampleOrder =
                                         if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X)
@@ -53,7 +53,7 @@ class TFLite(private val master: masterVision) {
                                             sampleRandomPos.RIGHT
                                         else
                                             sampleRandomPos.CENTER
-                        masterVision.TFLiteAlgorithm.INFER_LEFT  -> {
+                        masterV.TFLiteAlgorithm.INFER_LEFT  -> {
                             if(updatedRecognitions.size == 2) {
                                 if (goldMineralX == null)
                                     lastKnownSampleOrder = sampleRandomPos.LEFT
@@ -65,7 +65,7 @@ class TFLite(private val master: masterVision) {
                                                 sampleRandomPos.RIGHT
                             }
                         }
-                        masterVision.TFLiteAlgorithm.INFER_RIGHT -> {
+                        masterV.TFLiteAlgorithm.INFER_RIGHT -> {
                             if(updatedRecognitions.size == 2) {
                                 if (goldMineralX == null)
                                     lastKnownSampleOrder = sampleRandomPos.RIGHT

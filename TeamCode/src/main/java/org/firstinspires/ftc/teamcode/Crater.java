@@ -19,6 +19,9 @@ public class Crater extends Processor {
     public void runOpMode() throws InterruptedException {
         bot.init(hardwareMap);
         waitForStart();
+        TFv1 tf = new TFv1();
+        tf.vision.enable();
+
 
 
 

@@ -22,10 +22,10 @@ import java.util.List;
 public class Map {
     public BNO055IMU imu;
     HardwareMap hwMap = null;
-    public DcMotor motorLeftFront;
-    public DcMotor motorRightFront;
-    public DcMotor motorLeftBack;
-    public DcMotor motorRightBack;
+    public DcMotor motorLF;
+    public DcMotor motorLB;
+    public DcMotor motorRB;
+    public DcMotor motorRF;
     public DcMotor hangMotor;
     public DcMotor intakeMotor;
     public DcMotor liftMotor;
@@ -58,10 +58,10 @@ public class Map {
         // save reference to HW Map
         hwMap = ahwMap;
         imu = hwMap.get(BNO055IMU.class, "imu");
-        motorLeftFront = hwMap.dcMotor.get("motorLeftFront");
-        motorLeftBack = hwMap.dcMotor.get("motorLeftBack");
-        motorRightBack = hwMap.dcMotor.get("motorRightBack");
-        motorRightFront = hwMap.dcMotor.get("motorRightFront");
+        motorLF = hwMap.dcMotor.get("motorLF");
+        motorLB = hwMap.dcMotor.get("motorLB");
+        motorRB = hwMap.dcMotor.get("motorRB");
+        motorRF = hwMap.dcMotor.get("motorRF");
         liftMotor = hwMap.dcMotor.get("liftMotor");
         hangMotor = hwMap.dcMotor.get("hangMotor");
         intakeMotor = hwMap.dcMotor.get("intakeMotor");
@@ -93,15 +93,13 @@ public class Map {
 
         cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         vuforiaParameters.cameraName.getCameraCharacteristics();
-        motorLeftFront.setDirection(DcMotor.Direction.FORWARD);
-        motorLeftBack.setDirection(DcMotor.Direction.FORWARD);
-        motorRightFront.setDirection(DcMotor.Direction.FORWARD);
-        motorRightBack.setDirection(DcMotor.Direction.FORWARD);
+        motorLF.setDirection(DcMotor.Direction.FORWARD);
+        motorLB.setDirection(DcMotor.Direction.FORWARD);
+        motorRF.setDirection(DcMotor.Direction.FORWARD);
+        motorRB.setDirection(DcMotor.Direction.FORWARD);
         hangMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
-
-
 
 
 
@@ -131,26 +129,26 @@ public class Map {
         allTrackables.addAll(targetsRoverRuckus);
 
         hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLeftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLeftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorRB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
