@@ -19,27 +19,18 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 /**
  * Created by khadija on 11/30/2018.
  */
-public abstract class Processor extends LinearOpMode{
+public abstract class Processor extends LinearOpMode {
     Map bot = new Map();
-
-    public final static double DEFAULT_POWER = .7;
-    public final static double TICKSPERROTATION = 537.6;
     static final double P_TURN_COEFF = .018;
-    static final double I_TURN_COEFF = .01;
-    static final double D_TURN_COEFF = .026;
-    public final static int DIAMETEROFWHEEL = 4;
-    static final double TURN_SPEED = 0.6;
-    static final double DRIVE_SPEED = 0.6;
-    static final double HEADING_THRESHOLD = .75;
+    static final double I_TURN_COEFF = 0;
+    static final double D_TURN_COEFF = 0;
+    static final double HEADING_THRESHOLD = 5;
     static final double ANTI_WINDUP = 2;
 
-    static final double OMNI_WHEEL_CIRCUMFERENCE = 4 * Math.PI;
-
-    static final double COUNTS_PER_MOTOR_REV = 1120;
-    static final double DRIVE_GEAR_REDUCTION = 1.286;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;
-    static final double COUNTS_PER_INCH = ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415));
+    public final static double TICKSPERROTATION = 537.6;
+    public static final double OMNI_WHEEL_CIRCUMFERENCE = 4 * Math.PI;
+    public final static int DIAMETER_OF_WHEEL = 4;
+    public static final double DRIVE_GEAR_REDUCTION = 1.286;
 
     ElapsedTime runTime = new ElapsedTime();
     public int order = 2;
@@ -76,6 +67,7 @@ public abstract class Processor extends LinearOpMode{
     public void goAngle(double dist, double angle, double power) {
         resetEnc();
         enterPosenc();
+        angle = angle-180;
         double angel = Math.toRadians(angle);
         double x = Math.cos(angel);
         double y = Math.sin(angel);
@@ -90,8 +82,8 @@ public abstract class Processor extends LinearOpMode{
         bot.motorRB.setTargetPosition(ticksRB);
         bot.motorLB.setTargetPosition(ticksLB);
         bot.motorRF.setPower(power * (y - x));
-        bot.motorLF.setPower(power * (-y - x));
-        bot.motorLB.setPower(power * (-y + x));
+        bot.motorLF.setPower(-power * (-y - x));
+        bot.motorLB.setPower(-power * (-y + x));
         bot.motorRB.setPower(power * (y + x));
         while ((bot.motorLB.isBusy() && bot.motorRB.isBusy() && bot.motorRF.isBusy() && bot.motorLF.isBusy()) && opModeIsActive()) {
             telemetry.addData("Path2", "Running at %7d :%7d",
@@ -104,6 +96,7 @@ public abstract class Processor extends LinearOpMode{
                     bot.motorLF.getTargetPosition(),
                     bot.motorRB.getTargetPosition(),
                     bot.motorRF.getTargetPosition());
+            telemetry.addData("gyroHeading",bot.imu.getAngularOrientation());
             telemetry.update();
         }
         stopBotMotors();
@@ -124,9 +117,9 @@ public abstract class Processor extends LinearOpMode{
     }
     public void strafeLeft(double power){
         bot.motorRF.setPower(-power);
-        bot.motorLF.setPower(power);
+        bot.motorLF.setPower(-power);
         bot.motorLB.setPower(power);
-        bot.motorRB.setPower(-power);
+        bot.motorRB.setPower(power);
     }
     public void strafeRight(double power){
         bot.motorRF.setPower(-power);
@@ -140,57 +133,21 @@ public abstract class Processor extends LinearOpMode{
         Orientation ref = bot.imu.getAngularOrientation();
         double heading = ref.firstAngle;
         double angleWanted = target + heading;
-        double rcw = 1;
+        double rcw =1;
+        double speed = .2;
         double integral = 0;
         double previous_error = 0;
         while (rcw != 0 && opModeIsActive()) {
 
 
             ref = bot.imu.getAngularOrientation();
-            double error = angleWanted - ref.firstAngle;
+            double error = Math.signum(angleWanted - ref.firstAngle);
 
-            while (error > 180 && opModeIsActive())
-                error -= 360;
-            while (error < -180 && opModeIsActive())
-                error += 360;
-            double derivative = error - previous_error;
-            //small margin of error for increased speed
             if (Math.abs(error) < HEADING_THRESHOLD) {
                 error = 0;
             }
-            //prevents integral from growing too large
-            if (Math.abs(error) < ANTI_WINDUP && error != 0) {
-                integral += error;
-            } else {
-                integral = 0;
-            }
-            if (integral > (50 / I_TURN_COEFF)) {
-                integral = 50 / I_TURN_COEFF;
-            }
-            if (error == 0) {
-                derivative = 0;
-            }
-            rcw = P_TURN_COEFF * error + I_TURN_COEFF * integral + D_TURN_COEFF * derivative;
-            previous_error = error;
-            accelerate(rcw);
 
-            telemetry.addData("first angle", ref.firstAngle);
-            telemetry.addData("second angle", ref.secondAngle);
-            telemetry.addData("third angle", ref.thirdAngle);
-            telemetry.addData("target", target);
-            telemetry.addData("speed ", rcw);
-            telemetry.addData("error", angleWanted - ref.firstAngle);
-            telemetry.addData("angleWanted", angleWanted);
-            telemetry.addData("motor power", bot.motorLF.getPower());
-            telemetry.addData("rcw", rcw);
-            telemetry.addData("P", P_TURN_COEFF * error);
-            telemetry.addData("I", I_TURN_COEFF * integral);
-            telemetry.addData("D", D_TURN_COEFF * derivative);
-            telemetry.update();
-
-            sleep(20);
-
-
+            accelerate(speed*error);
         }
         accelerate(0);
     }
@@ -370,7 +327,7 @@ public abstract class Processor extends LinearOpMode{
 
     public void hitGold(){
         intakeOn();
-        goAngle(20,90,.8);
+        goAngle(30,90,.8);
         sleep(500);
         intakeOff();
     }
@@ -401,20 +358,57 @@ public abstract class Processor extends LinearOpMode{
         align(45);
         goAngle(30,-90,.8);
         bot.bucketServo.setPosition(1);
+        sleep(1000);
     }
 
     public void descend()
     {
+        int intialTicks = bot.hangMotor.getCurrentPosition();
+        int target = 10*(int)(9.5/(Math.PI* (1.5))*1680);
+        //distance the hang needs to decend divided by the circumfrence multiplied by the pulses per rotation of a 60
+        bot.hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bot.hangMotor.setTargetPosition(target+intialTicks);
+        bot.hangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bot.hangMotor.setPower(-1.0);
+
         runTime.reset();
-        while(runTime.seconds()<8.5) {
-            bot.hangMotor.setPower(0.5);
+        while(runTime.seconds()<10&&bot.hangMotor.isBusy()) {
+            strafeLeft(.2);
+            telemetry.addData("location",bot.hangMotor.getCurrentPosition());
+
+            telemetry.addData("target", bot.hangMotor.getTargetPosition());
+            telemetry.update();
         }
+        bot.hangMotor.setPower(0);
+    }
+    public void descend2()
+    {
+        int intialTicks = bot.hangMotor.getCurrentPosition();
+        int target = 2*-1*(int)(9.5/(Math.PI* (1.5))*1680);
+        //distance the hang needs to decend divided by the circumfrence multiplied by the pulses per rotation of a 60
+        bot.hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bot.hangMotor.setTargetPosition(target+intialTicks);
+        bot.hangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bot.hangMotor.setPower(1.0);
+
+        runTime.reset();
+        while(runTime.seconds()<10&&bot.hangMotor.isBusy()) {
+            telemetry.addData("location",bot.hangMotor.getCurrentPosition());
+
+            telemetry.addData("target", bot.hangMotor.getTargetPosition());
+            telemetry.update();
+        }
+        bot.hangMotor.setPower(0);
+    }
+    public void driveAwayFromLander(){
+        goAngle(1.5,-90,.3);
+        goAngle(1.5,180,.3);
+        align(0);
+
     }
 
-
-
     public void intakeOn(){
-        bot.intakeMotor.setPower(1);
+        bot.intakeMotor.setPower(-1);
     }
 
     public void intakeOff(){
