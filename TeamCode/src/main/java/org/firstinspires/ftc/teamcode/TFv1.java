@@ -31,6 +31,7 @@ public class TFv1 extends Processor {
             vision.init();// enables the camera overlay. this will take a couple of seconds
             vision.enable();// enables the tracking algorithms. this might also take a little time
             goldPosition = vision.getTfLite().getLastKnownSampleOrder();
+
             vision.disable();// disables tracking algorithms. this will free up your phone's processing power for other jobs.
 
 
