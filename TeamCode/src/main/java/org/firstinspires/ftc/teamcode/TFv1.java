@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 /**
  * Created by khadija on 12/7/2018.
  */
-@Autonomous
+@Autonomous(name="Hi",group = "hello")
 public class TFv1 extends Processor {
     masterV vision;
     sampleRandomPos goldPosition;
@@ -25,11 +25,8 @@ public class TFv1 extends Processor {
         waitForStart();
 
 
-
         while(opModeIsActive()){
             telemetry.addData("goldPosition was", goldPosition);// giving feedback
-            descend();
-            turn(90);
             vision = new masterV(parameters, hardwareMap, true, masterV.TFLiteAlgorithm.INFER_NONE);
             vision.init();// enables the camera overlay. this will take a couple of seconds
             vision.enable();// enables the tracking algorithms. this might also take a little time
@@ -58,7 +55,6 @@ public class TFv1 extends Processor {
                     break;
                 case UNKNOWN:
                     telemetry.addLine("staying put");
-                    turn(360);
                     break;
             }
 
