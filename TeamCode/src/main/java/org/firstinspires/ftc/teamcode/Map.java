@@ -42,11 +42,10 @@ public class Map {
     public NavxMicroNavigationSensor Navx = null;*/
 
 
-
+//public WebcamName Logi;
 
     public int cameraMonitorViewId;
 
-    //public WebcamName Logi;
 
 
     VuforiaLocalizer vuforia;
@@ -93,6 +92,8 @@ public class Map {
 
         cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         vuforiaParameters.cameraName.getCameraCharacteristics();
+
+
         motorLF.setDirection(DcMotor.Direction.FORWARD);
         motorLB.setDirection(DcMotor.Direction.FORWARD);
         motorRF.setDirection(DcMotor.Direction.FORWARD);

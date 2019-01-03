@@ -78,14 +78,14 @@ public class TeleMap {
         hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bucketMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bucketMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bucketMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
     }
 }
