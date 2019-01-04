@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.hardware.*;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -28,9 +30,10 @@ public class TeleMap {
     public DcMotor bucketMotor;
 
     public Servo bucketServo;
+    public Servo teamMarker;
 
-    public DistanceSensor limit1;
-    public DistanceSensor limit2;
+    public DigitalChannel limit1;
+    public DigitalChannel limit2;
 
     public void init(HardwareMap ahwMap) {
 
@@ -47,8 +50,9 @@ public class TeleMap {
 
         bucketServo = hwMap.servo.get("bucketServo");
 
-        limit1 = hwMap.get(DistanceSensor.class,"limit1");
-        limit2 = hwMap.get(DistanceSensor.class,"limit2");
+        limit1 = hwMap.get(DigitalChannel.class,"limit1");
+        limit2 = hwMap.get(DigitalChannel.class,"limit2");
+
 
         motorLF.setDirection(DcMotor.Direction.FORWARD);
         motorRB.setDirection(DcMotor.Direction.FORWARD);

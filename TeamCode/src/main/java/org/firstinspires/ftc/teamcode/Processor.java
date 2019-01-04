@@ -147,6 +147,7 @@ public abstract class Processor extends LinearOpMode {
                 error = 0;
             }
 
+            sleep(12);
             accelerate(speed*error);
         }
         accelerate(0);

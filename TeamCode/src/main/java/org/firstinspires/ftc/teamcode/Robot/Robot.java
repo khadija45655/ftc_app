@@ -5,8 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Robot {
+public class Robot implements OpModeIF {
     public LinearOpMode currentOpMode = null;
+    public Telemetry telemetry = null;
 
     public DriveTrain driveTrain;
     public Hang hang;
@@ -19,11 +20,11 @@ public class Robot {
     }
 
     public void initBot(LinearOpMode currentOpMode,HardwareMap ahwmap, Mode mode){
-        driveTrain = new DriveTrain(ahwmap, mode);
-        hang = new Hang(ahwmap, mode);
-        intake = new Intake(ahwmap,mode);
-        output = new Output(ahwmap,mode);
-        sensors = new Sensors(ahwmap,mode);
+        this.driveTrain = new DriveTrain(ahwmap, mode);
+        this.hang = new Hang(ahwmap, mode);
+        this.intake = new Intake(ahwmap,mode);
+        this.output = new Output(ahwmap,mode);
+        this.sensors = new Sensors(ahwmap,mode);
         this.currentOpMode = currentOpMode;
 
     }
@@ -40,4 +41,5 @@ public class Robot {
         }
         return true;
     }
+
 }
