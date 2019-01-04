@@ -131,7 +131,7 @@ public class DriveTrainProcessor {
         accelerate(0);
     }
 
-    private void accelerate(double speed) {
+    public void accelerate(double speed) {
         double clip_speed = Range.clip(speed, -1, 1);
          driveTrain.motorLF.setPower(clip_speed);
          driveTrain.motorRF.setPower(clip_speed);

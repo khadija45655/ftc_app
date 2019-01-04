@@ -19,7 +19,7 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 /**
  * Created by khadija on 11/30/2018.
  */
-public abstract class Processor extends LinearOpMode {
+public abstract class Processor extends LinearOpMode {/*
     Map bot = new Map();
     static final double P_TURN_COEFF = .018;
     static final double I_TURN_COEFF = 0;
@@ -161,7 +161,7 @@ public abstract class Processor extends LinearOpMode {
         and the other drives the inner arc. Powering the outer wheels faster than the inner wheels the creates the desired arc.
         */
 
-        double turnAngel = Math.toRadians(turnAngle);
+    /*    double turnAngel = Math.toRadians(turnAngle);
         double radius = (distance/2)/Math.sin(Math.abs(turnAngel)/2);
 
         //compute how many rotations to move desired distance
@@ -415,5 +415,5 @@ public abstract class Processor extends LinearOpMode {
     public void intakeOff(){
         bot.intakeMotor.setPower(0);
     }
-
+*/
 }

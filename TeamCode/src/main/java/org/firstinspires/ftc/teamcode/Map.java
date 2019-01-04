@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by khadija on 11/30/2018.
  */
-public class Map {
+public class Map {/*
     public BNO055IMU imu;
     HardwareMap hwMap = null;
     public DcMotor motorLF;
@@ -44,7 +44,7 @@ public class Map {
 
 //public WebcamName Logi;
 
-    public int cameraMonitorViewId;
+    /*public int cameraMonitorViewId;
 
 
 
@@ -126,7 +126,7 @@ public class Map {
         backSpace.setName("Back-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+        /*List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsRoverRuckus);
 
         hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -155,5 +155,5 @@ public class Map {
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-    }
+    }*/
 }

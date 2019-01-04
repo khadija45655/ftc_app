@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  * Created by khadija on 12/28/2018.
  */
-public abstract class Processor2 extends LinearOpMode {
+public abstract class Processor2 extends LinearOpMode {/*
     Map bot = new Map();
     static final double P_TURN_COEFF = .018;
     static final double I_TURN_COEFF = 0;
@@ -151,7 +151,7 @@ public abstract class Processor2 extends LinearOpMode {
         and the other drives the inner arc. Powering the outer wheels faster than the inner wheels the creates the desired arc.
         */
 
-        double turnAngel = Math.toRadians(turnAngle);
+   /*     double turnAngel = Math.toRadians(turnAngle);
         double radius = (distance/2)/Math.sin(Math.abs(turnAngel)/2);
 
         //compute how many rotations to move desired distance
@@ -409,6 +409,6 @@ public abstract class Processor2 extends LinearOpMode {
     public void turnit(){
 
     }
-
+*/
 }
 

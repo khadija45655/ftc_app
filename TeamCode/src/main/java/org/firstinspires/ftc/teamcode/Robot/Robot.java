@@ -19,13 +19,14 @@ public class Robot implements OpModeIF {
 
     }
 
-    public void initBot(LinearOpMode currentOpMode,HardwareMap ahwmap, Mode mode){
+    public void initBot(LinearOpMode currentOpMode,HardwareMap ahwmap, Mode mode,Telemetry telemetry){
         this.driveTrain = new DriveTrain(ahwmap, mode);
         this.hang = new Hang(ahwmap, mode);
         this.intake = new Intake(ahwmap,mode);
         this.output = new Output(ahwmap,mode);
         this.sensors = new Sensors(ahwmap,mode);
         this.currentOpMode = currentOpMode;
+        this.telemetry = telemetry;
 
     }
 
