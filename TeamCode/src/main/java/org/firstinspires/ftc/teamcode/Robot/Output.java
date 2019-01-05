@@ -8,7 +8,7 @@ public class Output {
     public Servo marker;
 
     public Output(HardwareMap hwMap, Mode mode){
-        bucketMotor = hwMap.dcMotor.get("liftMotor");
+        bucketMotor = hwMap.dcMotor.get("bucketMotor");
         bucketServo = hwMap.servo.get("bucketServo");
         marker = hwMap.servo.get("marker");
 

@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 /**
  * Created by khadija on 12/7/2018.
  */
-@Autonomous(name="Hi",group = "hello")
-public class TFv1 extends Processor {
-    masterV vision;
+//@Autonomous(name="Hi",group = "hello")
+public class TFv1 /*extends Processor*/ {
+    /*masterV vision;
     sampleRandomPos goldPosition;
 
     @Override
@@ -63,5 +63,5 @@ public class TFv1 extends Processor {
         }
 
         vision.shutdown();
-    }
+    }*/
 }
