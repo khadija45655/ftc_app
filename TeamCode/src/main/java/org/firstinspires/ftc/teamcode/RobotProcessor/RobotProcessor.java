@@ -120,9 +120,7 @@ public class RobotProcessor {
     public void displayTFOD() {
         if (bot.opModeIsActive()) {
             /** Activate Tensor Flow Object Detection. */
-            if (bot.sensors.tfod != null) {
-                bot.sensors.tfod.activate();
-            }
+            activateTFOD();
 
 
         }
@@ -179,6 +177,7 @@ public class RobotProcessor {
                 bot.telemetry.update();
             }
         }
+        deactivateTFOD();
 
     }
 
@@ -186,21 +185,16 @@ public class RobotProcessor {
             //Turn using PID
             // clockwise = negative input, counter-clockwise = positive input
 
-            double heading = bot.sensors.getHeading();
-            double angleWanted = heading;
+            activateTFOD();
+            double pixelheading = goldLocation();
+            double pixelWanted = 540; // center of the camera
             double rcw = 1;
             double integral = 0;
             double previous_error = 0;
             while (rcw != 0 && bot.currentOpMode.opModeIsActive()) {
 
 
-                double error = angleWanted - bot.sensors.getHeading();
-                ;
-
-                while (error > 180 && bot.currentOpMode.opModeIsActive())
-                    error -= 360;
-                while (error < -180 && bot.currentOpMode.opModeIsActive())
-                    error += 360;
+                double error = pixelWanted - goldLocation();
                 double derivative = error - previous_error;
                 //small margin of error for increased speed
            if (Math.abs(error) < PIXEL_THRESHOLD) {
@@ -227,8 +221,8 @@ public class RobotProcessor {
             //telemetry.addData("third angle", ref.thirdAngle);
             bot.telemetry.addData("target", "lol");
             bot.telemetry.addData("speed ", rcw);
-            bot.telemetry.addData("error", angleWanted - bot.sensors.getHeading());
-            bot.telemetry.addData("angleWanted", angleWanted);
+            bot.telemetry.addData("error", pixelWanted - goldLocation());
+            bot.telemetry.addData("angleWanted", pixelWanted);
             bot.telemetry.addData("motor power", bot.driveTrain.motorLF.getPower());
             bot.telemetry.addData("rcw", rcw);
             bot.telemetry.addData("P", P_SAMPLE_COEFF * error);
@@ -239,8 +233,170 @@ public class RobotProcessor {
             bot.currentOpMode.sleep(20);
 
             }
+        deactivateTFOD();
         driveTrainProcessor.accelerate(0);
 
     }
+
+    public int goldLocation(){
+        int goldX = 0;
+        if (bot.opModeIsActive()) {
+            /** Activate Tensor Flow Object Detection. */
+
+            if (bot.sensors.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = bot.sensors.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    bot.telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() == 3) {
+
+                    }
+                    int goldMineralX = -1;
+
+
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    int pos = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
+                            goldX = goldMineralX;
+                            goldMineralX = (int) recognition.getLeft();
+
+
+
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+                    bot.telemetry.addData("GoldmineralX", goldMineralX);
+                    bot.telemetry.addData("silverMineral1X", silverMineral1X);
+                    bot.telemetry.addData("silverMineral2X", silverMineral2X);
+
+
+                }
+                bot.telemetry.update();
+            }
+
+        }
+
+        return goldX;
+    }
+
+    public void turnSampleAngle(){
+        activateTFOD();
+        double heading = angleGold();
+        double angle = 0; // center of the camera
+        double rcw = 1;
+        double integral = 0;
+        double previous_error = 0;
+        while (rcw != 0 && bot.currentOpMode.opModeIsActive()) {
+
+
+            double error = angle - angleGold();
+            double derivative = error - previous_error;
+            //small margin of error for increased speed
+            if (Math.abs(error) < 2) {
+                error = 0;
+            }
+            //prevents integral from growing too large
+            if (Math.abs(error) < ANTI_WINDUP && error != 0) {
+                integral += error;
+            } else {
+                integral = 0;
+            }
+            if (integral > (50 / I_SAMPLE_COEFF)) {
+                integral = 50 / I_SAMPLE_COEFF;
+            }
+            if (error == 0) {
+                derivative = 0;
+            }
+            rcw = P_SAMPLE_COEFF * error + I_SAMPLE_COEFF * integral + D_SAMPLE_COEFF * derivative;
+            previous_error = error;
+            driveTrainProcessor.accelerate(rcw);
+
+            bot.telemetry.addData("first angle", bot.sensors.getHeading());
+            //telemetry.addData("second angle", ref.secondAngle);
+            //telemetry.addData("third angle", ref.thirdAngle);
+            bot.telemetry.addData("target", "lol");
+            bot.telemetry.addData("speed ", rcw);
+            bot.telemetry.addData("error", angle - angleGold());
+            bot.telemetry.addData("angleWanted", angle);
+            bot.telemetry.addData("motor power", bot.driveTrain.motorLF.getPower());
+            bot.telemetry.addData("rcw", rcw);
+            bot.telemetry.addData("P", P_SAMPLE_COEFF * error);
+            bot.telemetry.addData("I", I_SAMPLE_COEFF * integral);
+            bot.telemetry.addData("D", D_SAMPLE_COEFF * derivative);
+            bot.telemetry.update();
+
+            bot.currentOpMode.sleep(20);
+
+        }
+        deactivateTFOD();
+        driveTrainProcessor.accelerate(0);
+    }
+
+    public void activateTFOD(){
+        if (bot.sensors.tfod != null) {
+            bot.sensors.tfod.activate();
+        }
+    }
+
+    public void deactivateTFOD(){
+        if (bot.sensors.tfod != null) {
+            bot.sensors.tfod.shutdown();
+        }
+    }
+
+    public int angleGold(){
+        int goldAngle = 0;
+        if (bot.opModeIsActive()) {
+            /** Activate Tensor Flow Object Detection. */
+
+            if (bot.sensors.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = bot.sensors.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    bot.telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() == 3) {
+
+                    }
+                    int goldMineralAngle = -1;
+
+
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    int pos = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
+                            goldMineralAngle = (int) recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                            goldAngle = goldMineralAngle;
+
+
+
+
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+                    bot.telemetry.addData("GoldmineralX", goldMineralAngle);
+                    bot.telemetry.addData("silverMineral1X", silverMineral1X);
+                    bot.telemetry.addData("silverMineral2X", silverMineral2X);
+
+
+                }
+                bot.telemetry.update();
+            }
+
+        }
+
+        return goldAngle;
+    }
+
 
 }
