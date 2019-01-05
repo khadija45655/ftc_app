@@ -88,7 +88,7 @@ public class Tele extends OpMode{
             bot.bucketServo.setPosition(0.0);
         }
 
-        if(bot.limit1.getState()||bot.limit2.getState()) {
+        if(bot.limit1.getVoltage()>.2||bot.limit2.getVoltage()>.2) {
             count++;
             if (count>2){
                 bot.intakeMotor.setPower(-1);

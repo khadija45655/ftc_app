@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  * Created by khadija on 12/7/2018.
  */
 //@Autonomous(name="Hi",group = "hello")
-public class TFv1 /*extends Processor*/ {
-    /*masterV vision;
+public class TFv1 extends Processor {
+    masterV vision;
     sampleRandomPos goldPosition;
 
     @Override
@@ -38,21 +38,21 @@ public class TFv1 /*extends Processor*/ {
             switch (goldPosition){ // using for things in the autonomous program
                 case LEFT:
                     telemetry.addLine("going to the left");
-                    intakeOn();
+                    /*intakeOn();
                     goAngle(5,30,2);
-                    intakeOff();
+                    intakeOff();*/
                     break;
                 case CENTER:
                     telemetry.addLine("going straight");
-                    intakeOn();
+                    /*intakeOn();
                     driveForward(2);
-                    intakeOff();
+                    intakeOff();*/
                     break;
                 case RIGHT:
                     telemetry.addLine("going to the right");
-                    intakeOn();
+                    /*intakeOn();
                     goAngle(5,-30,2);
-                    intakeOff();
+                    intakeOff();*/
                     break;
                 case UNKNOWN:
                     telemetry.addLine("staying put");
@@ -63,5 +63,5 @@ public class TFv1 /*extends Processor*/ {
         }
 
         vision.shutdown();
-    }*/
+    }
 }

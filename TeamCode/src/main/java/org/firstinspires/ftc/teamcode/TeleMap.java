@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -33,8 +34,8 @@ public class TeleMap {
     public Servo bucketServo;
     public Servo teamMarker;
 
-    public DigitalChannel limit1;
-    public DigitalChannel limit2;
+    public AnalogInput limit1;
+    public AnalogInput limit2;
 
     public void init(HardwareMap ahwMap) {
 
@@ -51,9 +52,9 @@ public class TeleMap {
 
         bucketServo = hwMap.servo.get("bucketServo");
 
-        limit1 = hwMap.digitalChannel.get("limit1");
+        limit1 = hwMap.analogInput.get("limit1");
 
-        limit2 = hwMap.digitalChannel.get("limit2");
+        limit2 = hwMap.analogInput.get("limit2");
 
 
         motorLF.setDirection(DcMotor.Direction.FORWARD);
