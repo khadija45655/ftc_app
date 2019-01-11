@@ -9,8 +9,10 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "Decend", group = "tensor")
-public class Decend extends LinearOpMode {
+@Autonomous(name = "Drive1", group = "tensor")
+public class Drive1 extends LinearOpMode {
+
+    RobotProcessor proc = new RobotProcessor();
 
     /**
      * Override this method and place your code here.
@@ -22,15 +24,14 @@ public class Decend extends LinearOpMode {
      */
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
-
-
+        proc.bot.initBot(this,hardwareMap,Mode.Auto,telemetry);
+        proc.initProc();
         waitForStart();
 
-        proc.descend();
-        proc.driveTrainProcessor.goAngle(5,0,.3);
-        proc.driveTrainProcessor.goAngle(5,90 ,.3);
 
+        proc.driveTrainProcessor.goAngle(12,90,1);
+        proc.driveTrainProcessor.goAngle(12,270,1);
+        proc.driveTrainProcessor.goAngle(12,0,1);
 
     }
 }

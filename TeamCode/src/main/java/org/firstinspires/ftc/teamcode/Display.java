@@ -24,6 +24,8 @@ public class Display extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         proc.bot.initBot(this,hardwareMap,Mode.Auto,telemetry);
+        proc.initProc();
+
         waitForStart();
 
         proc.displayTFOD();

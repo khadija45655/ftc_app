@@ -142,7 +142,7 @@ public class DriveTrainProcessor {
     public void goAngle(double dist, double angle, double power) {
         resetEnc();
         enterPosenc();
-        angle = angle-180;
+        angle = angle+90;
         double angel = Math.toRadians(angle);
         double x = Math.cos(angel);
         double y = Math.sin(angel);
@@ -165,12 +165,12 @@ public class DriveTrainProcessor {
                  driveTrain.motorRF.isBusy() &&
                  driveTrain.motorLF.isBusy()) &&
                  opMode.opModeIsActive()) {
-             telemetry.addData("Path2", "Running at %7d :%7d",
+             telemetry.addData("Path2", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
                      driveTrain.motorLB.getCurrentPosition(),
                      driveTrain.motorLF.getCurrentPosition(),
                      driveTrain.motorRB.getCurrentPosition(),
                      driveTrain.motorRF.getCurrentPosition());
-             telemetry.addData("target", "Running at %7d :%7d",
+             telemetry.addData("target", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
                      driveTrain.motorLB.getTargetPosition(),
                      driveTrain.motorLF.getTargetPosition(),
                      driveTrain.motorRB.getTargetPosition(),
@@ -179,6 +179,7 @@ public class DriveTrainProcessor {
              telemetry.update();
         }
         stopBotMotors();
+        currentOpmode.sleep(200);
         enterEnc();
     }
     public void align(double offset) {

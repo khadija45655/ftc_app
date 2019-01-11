@@ -48,8 +48,8 @@ public class Sensors {
 
         }
         else {
-            limit1 = hwMap.get(DistanceSensor.class,"limit1");
-            limit2 = hwMap.get(DistanceSensor.class,"limit2");
+            //limit1 = hwMap.get(DistanceSensor.class,"limit1");
+            //limit2 = hwMap.get(DistanceSensor.class,"limit2");
         }
 
 

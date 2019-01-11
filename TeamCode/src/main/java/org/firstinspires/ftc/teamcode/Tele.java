@@ -87,13 +87,24 @@ public class Tele extends OpMode{
         {
             bot.bucketServo.setPosition(0.0);
         }
+        telemetry.addData("Path2", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
+                bot.motorLB.getCurrentPosition(),
+                bot.motorLF.getCurrentPosition(),
+                bot.motorRB.getCurrentPosition(),
+                bot.motorRF.getCurrentPosition());
+        telemetry.addData("target", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
+                bot.motorLB.getTargetPosition(),
+                bot.motorLF.getTargetPosition(),
+                bot.motorRB.getTargetPosition(),
+                bot.motorRF.getTargetPosition());
+        telemetry.update();
 
-        if(bot.limit1.getVoltage()>.2||bot.limit2.getVoltage()>.2) {
+       /* if(bot.limit1.getVoltage()>.2||bot.limit2.getVoltage()>.2) {
             count++;
             if (count>2){
                 bot.intakeMotor.setPower(-1);
                 count = 0;
             }
-        }
+        }*/
     }
 }

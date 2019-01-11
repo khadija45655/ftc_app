@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotProcessor;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -16,12 +19,12 @@ import static org.firstinspires.ftc.teamcode.RobotProcessor.DriveTrainProcessor.
 
 public class RobotProcessor {
     public Robot bot;
-    DriveTrainProcessor driveTrainProcessor;
-    HangProcessor hangProcessor;
-    IntakeProcessor intakeProcessor;
-    OutputProcessor outputProcessor;
-    SensorProcessor sensorProcessor;
-    ElapsedTime runTime;
+    public DriveTrainProcessor driveTrainProcessor;
+    public HangProcessor hangProcessor;
+    public IntakeProcessor intakeProcessor;
+    public OutputProcessor outputProcessor;
+    public SensorProcessor sensorProcessor;
+    public ElapsedTime runTime;
 
     static final double P_SAMPLE_COEFF = .018;
     static final double I_SAMPLE_COEFF = 0;
@@ -40,11 +43,29 @@ public class RobotProcessor {
         this.sensorProcessor = new SensorProcessor(this.bot.sensors);
         runTime = new ElapsedTime();
     }
+    public RobotProcessor(LinearOpMode currentOpMode, HardwareMap ahwmap, Mode mode, Telemetry telemetry) {
+        this.bot = new Robot(currentOpMode,ahwmap,mode,telemetry);
+        this.driveTrainProcessor = new DriveTrainProcessor(bot, bot.driveTrain, bot.sensors, bot.telemetry, bot.currentOpMode);
+        this.hangProcessor = new HangProcessor(this.bot.hang);
+        this.intakeProcessor = new IntakeProcessor(this.bot.intake);
+        this.outputProcessor = new OutputProcessor(this.bot.output);
+        this.sensorProcessor = new SensorProcessor(this.bot.sensors);
+        runTime = new ElapsedTime();
+    }
+
+    public void initProc(){
+        this.driveTrainProcessor = new DriveTrainProcessor(this.bot, bot.driveTrain, bot.sensors, bot.telemetry, bot.currentOpMode);
+        this.hangProcessor = new HangProcessor(this.bot.hang);
+        this.intakeProcessor = new IntakeProcessor(this.bot.intake);
+        this.outputProcessor = new OutputProcessor(this.bot.output);
+        this.sensorProcessor = new SensorProcessor(this.bot.sensors);
+        runTime = new ElapsedTime();
+    }
 
 
     public void descend() {
         int intialTicks = hangProcessor.hang.hangMotor.getCurrentPosition();
-        int target = 10 * (int) (9.5 / (Math.PI * (1.5)) * 1680);
+        int target = -7000;
         //distance the hang needs to decend divided by the circumfrence multiplied by the pulses per rotation of a 60
         hangProcessor.hang.hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangProcessor.hang.hangMotor.setTargetPosition(target + intialTicks);
@@ -52,13 +73,14 @@ public class RobotProcessor {
         hangProcessor.setPower(-1.0);
 
         runTime.reset();
-        while (runTime.seconds() < 10 && hangProcessor.hang.hangMotor.isBusy()) {
+        while (hangProcessor.hang.hangMotor.isBusy()) {
             driveTrainProcessor.strafeLeft(.2);
             bot.telemetry.addData("location", hangProcessor.hang.hangMotor.getCurrentPosition());
 
             bot.telemetry.addData("target", hangProcessor.hang.hangMotor.getTargetPosition());
             bot.telemetry.update();
         }
+        driveTrainProcessor.stopBotMotors();
         hangProcessor.hang.hangMotor.setPower(0);
     }
 

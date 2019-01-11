@@ -52,9 +52,9 @@ public class TeleMap {
 
         bucketServo = hwMap.servo.get("bucketServo");
 
-        limit1 = hwMap.analogInput.get("limit1");
+        //limit1 = hwMap.analogInput.get("limit1");
 
-        limit2 = hwMap.analogInput.get("limit2");
+        //limit2 = hwMap.analogInput.get("limit2");
 
 
         motorLF.setDirection(DcMotor.Direction.FORWARD);
@@ -85,14 +85,14 @@ public class TeleMap {
         hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bucketMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorLF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bucketMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hangMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bucketMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 }

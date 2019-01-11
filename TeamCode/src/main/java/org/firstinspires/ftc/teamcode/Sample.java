@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "Decend", group = "tensor")
-public class Decend extends LinearOpMode {
+@Autonomous(name = "Sample", group = "tensor")
+public class Sample extends LinearOpMode {
 
     /**
      * Override this method and place your code here.
@@ -27,9 +27,7 @@ public class Decend extends LinearOpMode {
 
         waitForStart();
 
-        proc.descend();
-        proc.driveTrainProcessor.goAngle(5,0,.3);
-        proc.driveTrainProcessor.goAngle(5,90 ,.3);
+        proc.displayLOCATION();
 
 
     }
