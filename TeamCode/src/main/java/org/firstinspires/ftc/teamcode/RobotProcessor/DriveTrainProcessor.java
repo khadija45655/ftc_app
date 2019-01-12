@@ -35,10 +35,10 @@ public class DriveTrainProcessor {
     static final double HEADING_THRESHOLD = 5;
     static final double ANTI_WINDUP = 2;
 
-    public final static double TICKSPERROTATION = 537.6;
-    public static final double OMNI_WHEEL_CIRCUMFERENCE = 4 * Math.PI;
-    public final static int DIAMETER_OF_WHEEL = 4;
-    public static final double DRIVE_GEAR_REDUCTION = 1.286;
+    public final static double TICKSPERROTATION = 1120;
+    public static final double OMNI_WHEEL_CIRCUMFERENCE = 3.93 * Math.PI;
+    public final static double DIAMETER_OF_WHEEL = 3.93;
+    public static final double DRIVE_GEAR_REDUCTION = 1.778;
 
     public void resetEnc() {
          driveTrain.motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -146,8 +146,8 @@ public class DriveTrainProcessor {
         double angel = Math.toRadians(angle);
         double x = Math.cos(angel);
         double y = Math.sin(angel);
-        double distance = dist / (OMNI_WHEEL_CIRCUMFERENCE);
-        double ticks = TICKSPERROTATION * distance;
+        double distanceRatio = dist / (OMNI_WHEEL_CIRCUMFERENCE);
+        double ticks = (TICKSPERROTATION*distanceRatio)/DRIVE_GEAR_REDUCTION;
         int ticksRF = (int) Math.round(ticks * (y - x));
         int ticksLF = (int) Math.round(ticks * (-y - x));
         int ticksLB = (int) Math.round(ticks * (-y + x));

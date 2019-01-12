@@ -33,6 +33,8 @@ public class RobotProcessor {
     static final double PIXEL_THRESHOLD = 3;
     static final double ANTI_WINDUP_PIXEL = 3;
 
+    public int locationMineral=-1;
+
 
     public RobotProcessor() {
         this.bot = new Robot();
@@ -84,14 +86,15 @@ public class RobotProcessor {
         hangProcessor.hang.hangMotor.setPower(0);
     }
 
-    public void displayLOCATION() {
+    public void identifyLocation() {
+
         if (bot.opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
+            /* Activate Tensor Flow Object Detection. */
             if (bot.sensors.tfod != null) {
                 bot.sensors.tfod.activate();
             }
-
-            while (bot.opModeIsActive()) {
+            runTime.reset();
+            while (locationMineral == -1||runTime.milliseconds()<2000) {
                 if (bot.sensors.tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -102,7 +105,7 @@ public class RobotProcessor {
                             int goldMineralX = -1;
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
-                            int pos = -1;
+
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
                                     goldMineralX = (int) recognition.getLeft();
@@ -116,15 +119,15 @@ public class RobotProcessor {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     bot.telemetry.addData("Gold Mineral Position", 1);
                                     bot.telemetry.addData("Left", "");
-                                    pos = 1;
+                                    locationMineral = 1;
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                     bot.telemetry.addData("Gold Mineral Position", 3);
                                     bot.telemetry.addData("Right", "");
-                                    pos = 3;
+                                    locationMineral = 3;
                                 } else {
                                     bot.telemetry.addData("Gold Mineral Position", 2);
                                     bot.telemetry.addData("Center", "");
-                                    pos = 2;
+                                    locationMineral = 2;
                                 }
                             }
                         }
@@ -139,9 +142,118 @@ public class RobotProcessor {
         }
     }
 
+    public void turntoGold(){
+        if(locationMineral==1)
+        {
+            driveTrainProcessor.align(30);
+        }
+        else if (locationMineral==3)
+        {
+            driveTrainProcessor.align(-30);
+        }
+        else
+        {
+            driveTrainProcessor.align(0);
+        }
+    }
+
+    public void alignForSample(){
+        if(locationMineral==1)
+        {
+            driveTrainProcessor.align(-30);
+        }
+        else if (locationMineral==3)
+        {
+            driveTrainProcessor.align(30);
+        }
+        else
+        {
+            driveTrainProcessor.align(0);
+        }
+    }
+
+    public void setUpToDropDepot(){
+        if (locationMineral == 1) {
+            //align north, drive north (hit wall), drive south, strafe west?, align northeast
+            driveTrainProcessor.align(-45);
+            driveTrainProcessor.goAngle(15, 0, .2);
+            driveTrainProcessor.goAngle(5,180, .3);
+            driveTrainProcessor.goAngle(8, 90, .3);
+            driveTrainProcessor.align(-90);
+        }
+        else if (locationMineral == 3) {
+            //align north, drive north (not as far) (hit wall), drive south, strafe west (more) , align northeast
+            driveTrainProcessor.align(-45);
+            driveTrainProcessor.goAngle(20, 0, .2);
+            driveTrainProcessor.goAngle(5,180, .3);
+            driveTrainProcessor.goAngle(30, 90, .3);
+            driveTrainProcessor.align(-90);
+        }
+        else {
+            //align north, drive north (somewher in between) (hit wall), drive south, strafe west (in between), align northeast
+            driveTrainProcessor.align(-45);
+            driveTrainProcessor.goAngle(12, 0, .2);
+            driveTrainProcessor.goAngle(5,180, .3);
+            driveTrainProcessor.goAngle(10, 90, .3);
+            driveTrainProcessor.align(-90);
+        }
+    }
+
+    public void realignForParkDepot() {
+        //align south, drive south forward (maybe a foot), strafe west right(hit wall), drive south forward to crater
+        driveTrainProcessor.align(135);
+        driveTrainProcessor.goAngle(10, 0, .3);
+        driveTrainProcessor.goAngle(20, 90, .2);
+
+        driveTrainProcessor.goAngle(20, 0, .5);
+        //driveTrainProcessor.goAngle(100, 0, .5);
+    }
+
+    public void setUpToDropCrater(){
+        if (locationMineral == 1) {
+            //align north, drive north (hit wall), drive south, strafe west?, align northeast
+            driveTrainProcessor.align(-45);
+            driveTrainProcessor.goAngle(15, 0, .2);
+            driveTrainProcessor.goAngle(5,180, .3);
+            driveTrainProcessor.goAngle(8, 90, .3);
+            driveTrainProcessor.align(-90);
+        }
+        else if (locationMineral == 3) {
+            //align north, drive north (not as far) (hit wall), drive south, strafe west (more) , align northeast
+            driveTrainProcessor.align(-45);
+            driveTrainProcessor.goAngle(10, 0, .2);
+            driveTrainProcessor.goAngle(5,180, .3);
+            driveTrainProcessor.goAngle(12, 90, .3);
+            driveTrainProcessor.align(-90);
+        }
+        else {
+            //align north, drive north (somewher in between) (hit wall), drive south, strafe west (in between), align northeast
+            driveTrainProcessor.align(-45);
+            driveTrainProcessor.goAngle(12, 0, .2);
+            driveTrainProcessor.goAngle(5,180, .3);
+            driveTrainProcessor.goAngle(10, 90, .3);
+            driveTrainProcessor.align(-90);
+        }
+    }
+
+    public void realignForParkCrater() {
+        //align south, drive south forward (maybe a foot), strafe west right(hit wall), drive south forward to crater
+        driveTrainProcessor.turn(-225);
+        driveTrainProcessor.goAngle(10, 0, .3);
+        driveTrainProcessor.goAngle(20, -90, .2);
+
+        driveTrainProcessor.goAngle(20, 0, .5);
+        //driveTrainProcessor.goAngle(100, 0, .5);
+    }
+
+    public void dropMarker(){
+        bot.output.marker.setPosition(0);
+        bot.currentOpMode.sleep(500);
+
+    }
     public void displayTFOD() {
         if (bot.opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
+            /* Activate Tensor Flow Object Detection. */
             activateTFOD();
 
 
@@ -202,6 +314,7 @@ public class RobotProcessor {
         deactivateTFOD();
 
     }
+
 
     public void turnSample(){///BRIJJD"INEFNEOFNWEDIN
             //Turn using PID
@@ -375,7 +488,7 @@ public class RobotProcessor {
     public int angleGold(){
         int goldAngle = 0;
         if (bot.opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
+            /* Activate Tensor Flow Object Detection. */
 
             if (bot.sensors.tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since

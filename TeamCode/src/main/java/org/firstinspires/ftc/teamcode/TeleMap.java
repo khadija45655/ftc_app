@@ -34,8 +34,8 @@ public class TeleMap {
     public Servo bucketServo;
     public Servo teamMarker;
 
-    public AnalogInput limit1;
-    public AnalogInput limit2;
+    //public AnalogInput limit1;
+    //public AnalogInput limit2;
 
     public void init(HardwareMap ahwMap) {
 

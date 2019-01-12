@@ -28,8 +28,10 @@ public class Turn extends LinearOpMode {
         proc.initProc();
         waitForStart();
 
-        proc.driveTrainProcessor.turn(90);
-        proc.driveTrainProcessor.goAngle(2,90,.3);
-        proc.driveTrainProcessor.goAngle(3,270,.3);
+        proc.driveTrainProcessor.align(-45);
+
+        //proc.driveTrainProcessor.turn(90);
+        //proc.driveTrainProcessor.goAngle(2,90,.3);
+        //proc.driveTrainProcessor.goAngle(3,270,.3);
     }
 }

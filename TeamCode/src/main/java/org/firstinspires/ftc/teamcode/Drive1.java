@@ -29,9 +29,8 @@ public class Drive1 extends LinearOpMode {
         waitForStart();
 
 
-        proc.driveTrainProcessor.goAngle(12,90,1);
-        proc.driveTrainProcessor.goAngle(12,270,1);
         proc.driveTrainProcessor.goAngle(12,0,1);
+        proc.driveTrainProcessor.goAngle(12,180,1);
 
     }
 }

@@ -26,7 +26,7 @@ public class TF3 extends LinearOpMode {
         proc.bot.initBot(this,hardwareMap,Mode.Auto,telemetry);
         waitForStart();
 
-        proc.displayLOCATION();
+        proc.identifyLocation();
 
     }
 }
