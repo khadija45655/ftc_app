@@ -179,9 +179,68 @@ public class DriveTrainProcessor {
              telemetry.update();
         }
         stopBotMotors();
+        telemetry.addData("path reached", sensors.imu.getAngularOrientation());
+        telemetry.update();
         currentOpmode.sleep(200);
         enterEnc();
     }
+    public void goAngleStall(double dist, double angle, double power) {
+        resetEnc();
+        enterPosenc();
+        angle = angle+90;
+        double angel = Math.toRadians(angle);
+        double x = Math.cos(angel);
+        double y = Math.sin(angel);
+        double stall = -1;
+        int count = 0;
+        double distanceRatio = dist / (OMNI_WHEEL_CIRCUMFERENCE);
+        double ticks = (TICKSPERROTATION*distanceRatio)/DRIVE_GEAR_REDUCTION;
+        int ticksRF = (int) Math.round(ticks * (y - x));
+        int ticksLF = (int) Math.round(ticks * (-y - x));
+        int ticksLB = (int) Math.round(ticks * (-y + x));
+        int ticksRB = (int) Math.round(ticks * (y + x));
+        driveTrain.motorLF.setTargetPosition(ticksLF);
+        driveTrain.motorRF.setTargetPosition(ticksRF);
+        driveTrain.motorRB.setTargetPosition(ticksRB);
+        driveTrain.motorLB.setTargetPosition(ticksLB);
+        driveTrain.motorRF.setPower(power * (y - x));
+        driveTrain.motorLF.setPower(-power * (-y - x));
+        driveTrain.motorLB.setPower(-power * (-y + x));
+        driveTrain.motorRB.setPower(power * (y + x));
+        while (( driveTrain.motorLB.isBusy() &&
+                driveTrain.motorRB.isBusy() &&
+                driveTrain.motorRF.isBusy() &&
+                driveTrain.motorLF.isBusy()) &&
+                opMode.opModeIsActive()) {
+            stall = driveTrain.motorRF.getCurrentPosition();
+            telemetry.addData("Path2", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
+                    driveTrain.motorLB.getCurrentPosition(),
+                    driveTrain.motorLF.getCurrentPosition(),
+                    driveTrain.motorRB.getCurrentPosition(),
+                    driveTrain.motorRF.getCurrentPosition());
+            telemetry.addData("target", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
+                    driveTrain.motorLB.getTargetPosition(),
+                    driveTrain.motorLF.getTargetPosition(),
+                    driveTrain.motorRB.getTargetPosition(),
+                    driveTrain.motorRF.getTargetPosition());
+            telemetry.addData("gyroHeading", sensors.imu.getAngularOrientation());
+            telemetry.update();
+            if(stall == driveTrain.motorRF.getCurrentPosition()){
+                count++;
+            }
+            if(count>10){
+                break;
+            }
+
+            stall = driveTrain.motorRF.getCurrentPosition();
+        }
+        stopBotMotors();
+        telemetry.addData("path reached", sensors.imu.getAngularOrientation());
+        telemetry.update();
+        currentOpmode.sleep(200);
+        enterEnc();
+    }
+
     public void align(double offset) {
         //turns to a specific angle
 

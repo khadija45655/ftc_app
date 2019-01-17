@@ -24,7 +24,7 @@ public class NewarkDepot extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
 
-
+        proc.displayINIT();
         waitForStart();
 
         proc.identifyLocation();
@@ -34,14 +34,39 @@ public class NewarkDepot extends LinearOpMode {
         proc.driveTrainProcessor.goAngle(2.5,0,.3);
         proc.driveTrainProcessor.goAngle(2.5,90 ,.3);
         proc.turntoGold();
+        proc.intakeProcessor.intakeOn();
         proc.driveTrainProcessor.goAngle(35,0,.5);
-        //proc.alignForSample();
-        //proc.driveTrainProcessor.goAngle(30,0,.5);
+        proc.alignForSample();
+        proc.driveTrainProcessor.goAngle(20,0,.5);
+        proc.driveTrainProcessor.align(0);
+        proc.intakeProcessor.intakeOff();
+        proc.driveTrainProcessor.align(-90);
+        proc.dropMarker();
 
-        proc.setUpToDropDepot();
+        proc.driveTrainProcessor.align(-45);
+        proc.driveTrainProcessor.goAngleStall(17,90,.3);
+        proc.driveTrainProcessor.goAngleStall(2,-90,.3);
+
+        proc.driveTrainProcessor.align(-45);
+        proc.driveTrainProcessor.goAngleStall(2,-90,.3);
+
+
+
+        proc.driveTrainProcessor.goAngleStall(20,180,1);
+
+        /*proc.driveTrainProcessor.goAngle(50,0,1);
+
+        proc.driveTrainProcessor.goAngle(9,90,1);
+        proc.driveTrainProcessor.goAngle(50,0,1);
+
+
+
+
+
+        /*proc.setUpToDropDepot();
         proc.dropMarker();
         sleep(1000);
-        proc.realignForParkDepot();
+        proc.realignForParkDepot();*/
 
         //proc.driveTrainProcessor.turn(205);
         //proc.dropMarker();

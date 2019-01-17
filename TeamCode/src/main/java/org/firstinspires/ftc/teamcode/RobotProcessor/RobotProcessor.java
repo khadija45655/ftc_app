@@ -75,7 +75,7 @@ public class RobotProcessor {
         hangProcessor.setPower(-1.0);
 
         runTime.reset();
-        while (hangProcessor.hang.hangMotor.isBusy()) {
+        while (hangProcessor.hang.hangMotor.isBusy()&&bot.opModeIsActive()) {
             driveTrainProcessor.strafeLeft(.2);
             bot.telemetry.addData("location", hangProcessor.hang.hangMotor.getCurrentPosition());
 
@@ -94,7 +94,7 @@ public class RobotProcessor {
                 bot.sensors.tfod.activate();
             }
             runTime.reset();
-            while (locationMineral == -1||runTime.milliseconds()<2000) {
+            while (locationMineral == -1&&runTime.milliseconds()<5000&&bot.opModeIsActive()) {
                 if (bot.sensors.tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -142,6 +142,70 @@ public class RobotProcessor {
         }
     }
 
+    public void identifyLocationV2() {
+
+        if (bot.opModeIsActive()) {
+            /* Activate Tensor Flow Object Detection. */
+            if (bot.sensors.tfod != null) {
+                bot.sensors.tfod.activate();
+            }
+            runTime.reset();
+            while (locationMineral == -1/*&&runTime.milliseconds()<5000*/&&bot.opModeIsActive()) {
+                if (bot.sensors.tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = bot.sensors.tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        bot.telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                            int goldMineralX = -1;
+                            int silverMineral1X = -1;
+                            int silverMineral2X = -1;
+
+                            for (Recognition recognition : updatedRecognitions) {
+                                if(recognition.getTop()<150){
+                                    //ignore
+                                    bot.telemetry.addData("nah","fam");
+                                }
+                                else if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
+                                    goldMineralX = (int) recognition.getLeft();
+                                    bot.telemetry.addData("gold boi","fam");
+
+                                } else if (silverMineral1X == -1) {
+                                    silverMineral1X = (int) recognition.getLeft();
+                                } else {
+                                    silverMineral2X = (int) recognition.getLeft();
+                                }
+                            }
+                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                    bot.telemetry.addData("Gold Mineral Position", 1);
+                                    bot.telemetry.addData("Left", "");
+                                    locationMineral = 1;
+                                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                    bot.telemetry.addData("Gold Mineral Position", 3);
+                                    bot.telemetry.addData("Right", "");
+                                    locationMineral = 3;
+                                } else {
+                                    bot.telemetry.addData("Gold Mineral Position", 2);
+                                    bot.telemetry.addData("Center", "");
+                                    locationMineral = 2;
+                                }
+                            }
+
+                            bot.telemetry.addData("yote","yeet");
+
+                        bot.telemetry.update();
+                    }
+                }
+            }
+        }
+
+        if (bot.sensors.tfod != null) {
+            bot.sensors.tfod.shutdown();
+        }
+    }
+
     public void turntoGold(){
         if(locationMineral==1)
         {
@@ -169,6 +233,21 @@ public class RobotProcessor {
         else
         {
             driveTrainProcessor.align(0);
+        }
+    }
+
+    public void alignFor2ndSample(){
+        if(locationMineral==1)
+        {
+            driveTrainProcessor.align(-30-90);
+        }
+        else if (locationMineral==3)
+        {
+            driveTrainProcessor.align(30-90);
+        }
+        else
+        {
+            driveTrainProcessor.align(0-90);
         }
     }
 
@@ -248,7 +327,7 @@ public class RobotProcessor {
 
     public void dropMarker(){
         bot.output.marker.setPosition(0);
-        bot.currentOpMode.sleep(500);
+        bot.currentOpMode.sleep(1500);
 
     }
     public void displayTFOD() {
@@ -312,6 +391,68 @@ public class RobotProcessor {
             }
         }
         deactivateTFOD();
+
+    }
+
+    public void displayINIT(){
+
+            activateTFOD();
+
+
+
+        while(!bot.opModeIsActive()) {
+            if (bot.sensors.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = bot.sensors.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    bot.telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() == 3) {
+
+                    }
+                    int goldMineralX = -1;
+                    int goldMineralY = -1;
+                    int goldMineralBot = -1;
+                    int goldMineralTop = -1;
+                    int goldMineralWidth = -1;
+                    int goldMineralHeight = -1;
+                    double goldMineralAngle = -1;
+
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    int pos = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getLeft();
+                            goldMineralY = (int) recognition.getRight();
+                            goldMineralBot = (int) recognition.getBottom();
+                            goldMineralTop = (int) recognition.getTop();
+                            goldMineralWidth = (int) recognition.getWidth();
+                            goldMineralHeight = (int) recognition.getHeight();
+                            goldMineralAngle = (int) recognition.estimateAngleToObject(AngleUnit.DEGREES);
+
+
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+                    bot.telemetry.addData("GoldmineralX", goldMineralX);
+                    bot.telemetry.addData("goldMineralY", goldMineralY);
+                    bot.telemetry.addData("goldMineralBot", goldMineralBot);
+                    bot.telemetry.addData("goldMineralTop", goldMineralTop);
+                    bot.telemetry.addData("goldMineralWidth", goldMineralWidth);
+                    bot.telemetry.addData("goldMineralHeight", goldMineralHeight);
+                    bot.telemetry.addData("goldMineralAngle", goldMineralAngle);
+                    bot.telemetry.addData("silverMineral1X", silverMineral1X);
+                    bot.telemetry.addData("silverMineral2X", silverMineral2X);
+
+
+                }
+                bot.telemetry.update();
+            }
+        }
 
     }
 
@@ -485,7 +626,7 @@ public class RobotProcessor {
         }
     }
 
-    public int angleGold(){
+    public int angleGold() {
         int goldAngle = 0;
         if (bot.opModeIsActive()) {
             /* Activate Tensor Flow Object Detection. */
@@ -509,8 +650,6 @@ public class RobotProcessor {
                         if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
                             goldMineralAngle = (int) recognition.estimateAngleToObject(AngleUnit.DEGREES);
                             goldAngle = goldMineralAngle;
-
-
 
 
                         } else if (silverMineral1X == -1) {

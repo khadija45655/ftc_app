@@ -24,11 +24,12 @@ public class NewarkCraterDouble extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
 
+        proc.displayINIT();
 
         waitForStart();
 
         // identify location of particle
-        proc.identifyLocation();
+        proc.identifyLocationV2();
         telemetry.addData("location", proc.locationMineral);
 
         // decend off lander
@@ -39,29 +40,47 @@ public class NewarkCraterDouble extends LinearOpMode {
         // turn to gold mineral
         proc.turntoGold();
         // hit gold mineral
-        proc.driveTrainProcessor.goAngle(35,0,.5);
-        proc.driveTrainProcessor.align(0);
+        proc.intakeProcessor.intakeOn();
+        proc.driveTrainProcessor.goAngle(27,0,.5);
 
-        proc.driveTrainProcessor.goAngle(10,180,.5);
+
+        proc.driveTrainProcessor.goAngle(13,180,.5);
         proc.driveTrainProcessor.align(0);
+        proc.intakeProcessor.intakeOff();
         //strafe to wall
-        proc.driveTrainProcessor.goAngle(30,-90,.5);
+        proc.driveTrainProcessor.goAngleStall(50,90,.6);
 
         //drive to depot
-        proc.driveTrainProcessor.align(45);
-        proc.driveTrainProcessor.goAngle(30,180,.7);
+        proc.driveTrainProcessor.align(-45);
+        proc.driveTrainProcessor.goAngle(5,90,1);
+        proc.driveTrainProcessor.goAngle(46,165,1.0);
         proc.dropMarker();
         //turn toward sample
-        //identify seconf particle
-        //push off particle
-        //strafe toward crater
-        //turn
-        //ram crater to park
-        proc.alignForSample();
+        proc.driveTrainProcessor.goAngle(7,-90,.7);
 
-        proc.setUpToDropCrater();
-        proc.dropMarker();
-        proc.realignForParkCrater();
+        proc.driveTrainProcessor.align(-90);
+        //identify seconf particle
+        proc.alignFor2ndSample();
+        //push off particle
+        proc.intakeProcessor.intakeOn();
+
+        proc.driveTrainProcessor.goAngle(30,0,.5);
+        proc.driveTrainProcessor.goAngle(25,180,.5);
+        proc.intakeProcessor.intakeOff();
+
+        //turn
+
+        proc.driveTrainProcessor.align(-45);
+        //ram crater to park
+        proc.driveTrainProcessor.goAngle(1,90,1);
+
+        proc.driveTrainProcessor.goAngle(50,0,1);
+
+        proc.driveTrainProcessor.goAngle(9,90,1);
+        proc.driveTrainProcessor.goAngle(50,0,1);
+
+
+
 
         //proc.driveTrainProcessor.turn(205);
         //proc.dropMarker();
@@ -70,6 +89,6 @@ public class NewarkCraterDouble extends LinearOpMode {
     }
 
     //fpublic void kill(){
-    // kill();
+    // kill();f
     // }
 }
