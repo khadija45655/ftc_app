@@ -139,7 +139,7 @@ public class Tele extends OpMode{
             bot.intakeMotor.setPower(1);
         }
 
-        bot.bucketMotor.setPower(gamepad2.right_stick_y);
+        bot.bucketMotor .setPower(gamepad2.right_stick_y);
 
         //triggers return -1.0 when up and 1.0 when down
         if(gamepad1.right_trigger>0){
