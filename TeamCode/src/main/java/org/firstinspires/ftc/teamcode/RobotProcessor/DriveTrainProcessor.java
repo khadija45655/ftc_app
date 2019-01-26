@@ -245,7 +245,7 @@ public class DriveTrainProcessor {
         //turns to a specific angle
 
         double error =  sensors.getHeading();
-        double diff = offset - error;
+        double diff = offset - error+90;
         turn(diff);
     }
     public void driveForward(double power){
