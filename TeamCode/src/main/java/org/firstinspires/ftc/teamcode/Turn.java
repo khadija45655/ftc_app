@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Robot.Mode;
-import org.firstinspires.ftc.teamcode.Robot.Robot;
-import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
+        import org.firstinspires.ftc.robotcore.external.Telemetry;
+        import org.firstinspires.ftc.teamcode.Robot.Mode;
+        import org.firstinspires.ftc.teamcode.Robot.Robot;
+        import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
 @Autonomous(name = "Turn", group = "tensor")
 public class Turn extends LinearOpMode {
@@ -28,10 +28,8 @@ public class Turn extends LinearOpMode {
         proc.initProc();
         waitForStart();
 
-        proc.driveTrainProcessor.align(-45);
+        proc.driveTrainProcessor.turn(45);
 
-        //proc.driveTrainProcessor.turn(90);
-        //proc.driveTrainProcessor.goAngle(2,90,.3);
-        //proc.driveTrainProcessor.goAngle(3,270,.3);
+
     }
 }

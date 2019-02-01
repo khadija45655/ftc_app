@@ -37,10 +37,12 @@ public class NewarkDepot extends LinearOpMode {
         proc.intakeProcessor.intakeOn();
         proc.driveTrainProcessor.goAngle(35,0,.5);
         proc.alignForSample();
-        proc.driveTrainProcessor.goAngle(20,0,.5);
+        proc.driveTrainProcessor.goAngle(30,0,.5);
         proc.driveTrainProcessor.align(0);
         proc.intakeProcessor.intakeOff();
         proc.driveTrainProcessor.align(-90);
+
+
         proc.dropMarker();
 
         proc.driveTrainProcessor.align(-45);
@@ -48,11 +50,19 @@ public class NewarkDepot extends LinearOpMode {
         proc.driveTrainProcessor.goAngleStall(2,-90,.3);
 
         proc.driveTrainProcessor.align(-45);
-        proc.driveTrainProcessor.goAngleStall(2,-90,.3);
+        proc.driveTrainProcessor.goAngleStall(4,90,.3);
 
 
 
         proc.driveTrainProcessor.goAngleStall(20,180,1);
+
+
+        proc.driveTrainProcessor.goAngle(1,-90,1);
+
+        proc.driveTrainProcessor.goAngle(45,180,1);
+
+        proc.driveTrainProcessor.goAngle(9,90,1);
+        proc.driveTrainProcessor.goAngle(50,180,1);
 
         /*proc.driveTrainProcessor.goAngle(50,0,1);
 

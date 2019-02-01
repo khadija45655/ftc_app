@@ -34,21 +34,21 @@ public class NewarkCraterDouble extends LinearOpMode {
 
         // decend off lander
         proc.descend();
-        proc.driveTrainProcessor.goAngle(2.5,0,.3);
-        proc.driveTrainProcessor.goAngle(2.5,90 ,.3);
+        proc.driveTrainProcessor.goAngle(2.5,0,.45);
+        proc.driveTrainProcessor.goAngle(2.5,90 ,.45);
 
         // turn to gold mineral
         proc.turntoGold();
         // hit gold mineral
         proc.intakeProcessor.intakeOn();
-        proc.driveTrainProcessor.goAngle(27,0,.5);
+        proc.driveTrainProcessor.goAngle(27,0,1);
 
 
-        proc.driveTrainProcessor.goAngle(13,180,.5);
-        proc.driveTrainProcessor.align(0);
+        proc.driveTrainProcessor.goAngle(13,180,1);
+        proc.driveTrainProcessor.align(-4);
         proc.intakeProcessor.intakeOff();
         //strafe to wall
-        proc.driveTrainProcessor.goAngleStall(50,90,.6);
+        proc.driveTrainProcessor.goAngleStall(57,90,1);
 
         //drive to depot
         proc.driveTrainProcessor.align(-45);
@@ -56,7 +56,7 @@ public class NewarkCraterDouble extends LinearOpMode {
         proc.driveTrainProcessor.goAngle(46,165,1.0);
         proc.dropMarker();
         //turn toward sample
-        proc.driveTrainProcessor.goAngle(7,-90,.7);
+        proc.driveTrainProcessor.goAngle(7,-90,1);
 
         proc.driveTrainProcessor.align(-90);
         //identify seconf particle
@@ -64,8 +64,8 @@ public class NewarkCraterDouble extends LinearOpMode {
         //push off particle
         proc.intakeProcessor.intakeOn();
 
-        proc.driveTrainProcessor.goAngle(30,0,.5);
-        proc.driveTrainProcessor.goAngle(25,180,.5);
+        proc.driveTrainProcessor.goAngle(30,0,1);
+        proc.driveTrainProcessor.goAngle(25,180,1);
         proc.intakeProcessor.intakeOff();
 
         //turn
@@ -74,7 +74,10 @@ public class NewarkCraterDouble extends LinearOpMode {
         //ram crater to park
         proc.driveTrainProcessor.goAngle(1,90,1);
 
-        proc.driveTrainProcessor.goAngle(50,0,1);
+        proc.driveTrainProcessor.goAngle(30,0,1);
+
+        proc.driveTrainProcessor.align(-45);
+
 
         proc.driveTrainProcessor.goAngle(9,90,1);
         proc.driveTrainProcessor.goAngle(50,0,1);

@@ -29,11 +29,11 @@ public class DriveTrainProcessor {
      }
 
 
-    static final double P_TURN_COEFF = .018;
-    static final double I_TURN_COEFF = 0;
-    static final double D_TURN_COEFF = 0;
-    static final double HEADING_THRESHOLD = 5;
-    static final double ANTI_WINDUP = 2;
+    static final double P_TURN_COEFF = .025;
+    static final double I_TURN_COEFF = 0.04;
+    static final double D_TURN_COEFF = .03;
+    static final double HEADING_THRESHOLD = 2;
+    static final double ANTI_WINDUP = 4;
 
     public final static double TICKSPERROTATION = 1120;
     public static final double OMNI_WHEEL_CIRCUMFERENCE = 3.93 * Math.PI;
@@ -131,6 +131,69 @@ public class DriveTrainProcessor {
         accelerate(0);
     }
 
+    public void turn(double target, double p, double i, double d) {
+        //Turn using PID
+        // clockwise = negative input, counter-clockwise = positive input
+
+        double heading = sensors.getHeading();
+        double angleWanted = target + heading;
+        double rcw = 1;
+        double integral = 0;
+        double previous_error = 0;
+        while (rcw != 0 && currentOpmode.opModeIsActive()) {
+
+
+
+            double error = angleWanted - sensors.getHeading();;
+
+            while (error > 180 && currentOpmode.opModeIsActive())
+                error -= 360;
+            while (error < -180 && currentOpmode.opModeIsActive())
+                error += 360;
+            double derivative = error - previous_error;
+            //small margin of error for increased speed
+            if (Math.abs(error) < HEADING_THRESHOLD) {
+                error = 0;
+            }
+            //prevents integral from growing too large
+            if (Math.abs(error) < ANTI_WINDUP && error != 0) {
+                integral += error;
+            } else {
+                integral = 0;
+            }
+            if (integral > (50 / i)) {
+                integral = 50 / i;
+            }
+            if (error == 0) {
+                derivative = 0;
+            }
+            rcw = p * error + i * integral + d * derivative;
+            previous_error = error;
+            accelerate(rcw);
+
+            telemetry.addData("first angle", sensors.getHeading());
+            //telemetry.addData("second angle", ref.secondAngle);
+            //telemetry.addData("third angle", ref.thirdAngle);
+            telemetry.addData("target", target);
+            telemetry.addData("speed ", rcw);
+            telemetry.addData("error", angleWanted - sensors.getHeading());
+            telemetry.addData("angleWanted", angleWanted);
+            telemetry.addData("motor power", driveTrain.motorLF.getPower());
+            telemetry.addData("rcw", rcw);
+            telemetry.addData("P", p * error);
+            telemetry.addData("I", i * integral);
+            telemetry.addData("D", d * derivative);
+            telemetry.addData("P_coe", p );
+            telemetry.addData("I_coe", i );
+            telemetry.addData("D_coe", d );
+            telemetry.update();
+
+            currentOpmode.sleep(20);
+
+
+        }
+        accelerate(0);
+    }
     public void accelerate(double speed) {
         double clip_speed = Range.clip(speed, -1, 1);
          driveTrain.motorLF.setPower(clip_speed);
@@ -245,7 +308,7 @@ public class DriveTrainProcessor {
         //turns to a specific angle
 
         double error =  sensors.getHeading();
-        double diff = offset - error+90;
+        double diff = offset - error + 90;
         turn(diff);
     }
     public void driveForward(double power){

@@ -14,9 +14,15 @@ public class Tele extends OpMode{
     double xpow;
     double ypow;
     double zpow;
+    double bucketPower = 0;
     int count = 0;
     boolean flipped;
+    boolean up;
+    boolean down;
+    boolean manualControl = false;
     boolean bird;
+    public static final int BUCKET_UP_POSITION = 1250;
+    public static final double RESTING_UP_POWER = -.2;
     ElapsedTime runtime = new ElapsedTime();
     @Override
     public void init() {
@@ -87,8 +93,15 @@ public class Tele extends OpMode{
 
             flipped = false;
         }
-        if(flipped){
+        if(flipped) {
             flipGamePad();
+        }
+
+        if(gamepad1.dpad_up){
+            bot.marker.setPosition(1);
+        }
+        if(gamepad1.dpad_down) {
+            bot.marker.setPosition(0);
         }
 
         double theta = Math.atan2(ypow, xpow); //angle of joystick
@@ -115,7 +128,11 @@ public class Tele extends OpMode{
         telemetry.addData("motorRF",bot.motorRF.getPower());
         telemetry.addData("motorLB",bot.motorLB.getPower());
         telemetry.addData("motorRB",bot.motorRB.getPower());
-        telemetry.addData("hangMotor",bot.hangMotor.getPower());
+        telemetry.addData("bucketMotor",bot.bucketMotor.getPower());
+        telemetry.addData("bucketMotor",bot.bucketMotor.getCurrentPosition());
+        telemetry.addData("manual slide",manualControl);
+
+
         telemetry.addData("count",count);
         telemetry.addData("Path2", "Running at motorLB %7d motorLF :%7d motorRB %7d motorRF %7d",
                 bot.motorLB.getCurrentPosition(),
@@ -138,8 +155,57 @@ public class Tele extends OpMode{
         if(gamepad2.y) {
             bot.intakeMotor.setPower(1);
         }
+        if(gamepad2.x) {
 
-        bot.bucketMotor .setPower(gamepad2.right_stick_y);
+        }
+
+        //bucketPower = gamepad2.right_stick_y;
+        if(gamepad2.left_bumper){
+            manualControl = true;
+        }
+        if(gamepad2.right_bumper){
+            manualControl = false;
+
+        }
+
+        if(manualControl){
+            bucketPower = gamepad2.right_stick_y;
+        }
+
+        if(gamepad2.dpad_up&&(!manualControl)){
+
+            up = true;
+            down = false;
+        }
+        if(gamepad2.dpad_down&&(!manualControl)){
+
+            up = false;
+            down = true;
+
+        }
+        if(gamepad2.dpad_left&&(!manualControl)){
+
+            up = false;
+            down = false;
+        }
+        if(up&&!manualControl) {
+            bucketPower = -1;
+        }
+        if(down&&!manualControl){
+            bucketPower = .5;
+        }
+        if(!up&&bot.bucketMotor.getCurrentPosition()<0&&!manualControl){
+            bucketPower = 0;
+            down = false;
+
+
+        }
+        if(!down&&bot.bucketMotor.getCurrentPosition()>BUCKET_UP_POSITION&&!manualControl){
+            bucketPower = RESTING_UP_POWER;
+            up = false;
+
+        }
+        bot.bucketMotor.setPower(-bucketPower);
 
         //triggers return -1.0 when up and 1.0 when down
         if(gamepad1.right_trigger>0){
@@ -152,10 +218,10 @@ public class Tele extends OpMode{
             bot.hangMotor.setPower(0);
         }
 
-        if(gamepad2.dpad_up){
+        if(gamepad2.left_trigger>0){
             bot.bucketServo.setPosition(1);
         }
-        if(gamepad2.dpad_down){
+        if(gamepad2.right_trigger>0){
             bot.bucketServo.setPosition(0);
         }
         /*
@@ -169,4 +235,6 @@ public class Tele extends OpMode{
         }
         */
     }
+
+
 }

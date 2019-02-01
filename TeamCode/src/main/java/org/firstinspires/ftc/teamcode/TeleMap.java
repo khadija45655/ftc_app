@@ -32,7 +32,7 @@ public class TeleMap {
     public DcMotor bucketMotor;
 
     public Servo bucketServo;
-    public Servo teamMarker;
+    public Servo marker;
 
     //public AnalogInput limit1;
     //public AnalogInput limit2;
@@ -51,6 +51,7 @@ public class TeleMap {
         intakeMotor = hwMap.dcMotor.get("intakeMotor");
 
         bucketServo = hwMap.servo.get("bucketServo");
+        marker = hwMap.servo.get("marker");
 
         //limit1 = hwMap.analogInput.get("limit1");
 

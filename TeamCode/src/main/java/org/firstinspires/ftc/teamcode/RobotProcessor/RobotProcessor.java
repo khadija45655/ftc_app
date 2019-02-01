@@ -94,7 +94,7 @@ public class RobotProcessor {
                 bot.sensors.tfod.activate();
             }
             runTime.reset();
-            while (locationMineral == -1&&runTime.milliseconds()<5000&&bot.opModeIsActive()) {
+            while (locationMineral == -1&&/*runTime.milliseconds()<5000&&*/bot.opModeIsActive()) {
                 if (bot.sensors.tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -134,6 +134,9 @@ public class RobotProcessor {
                         bot.telemetry.update();
                     }
                 }
+                if(runTime.milliseconds()>5000){
+                    locationMineral = 2;
+                }
             }
         }
 
@@ -150,7 +153,7 @@ public class RobotProcessor {
                 bot.sensors.tfod.activate();
             }
             runTime.reset();
-            while (locationMineral == -1/*&&runTime.milliseconds()<5000*/&&bot.opModeIsActive()) {
+            while (locationMineral == -1&&/*runTime.milliseconds()<5000&&*/bot.opModeIsActive()) {
                 if (bot.sensors.tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -197,6 +200,9 @@ public class RobotProcessor {
 
                         bot.telemetry.update();
                     }
+                }
+                if(runTime.milliseconds()>5000){
+                    locationMineral = 2;
                 }
             }
         }
@@ -504,6 +510,7 @@ public class RobotProcessor {
             bot.telemetry.addData("P", P_SAMPLE_COEFF * error);
             bot.telemetry.addData("I", I_SAMPLE_COEFF * integral);
             bot.telemetry.addData("D", D_SAMPLE_COEFF * derivative);
+
             bot.telemetry.update();
 
             bot.currentOpMode.sleep(20);
@@ -513,6 +520,7 @@ public class RobotProcessor {
         driveTrainProcessor.accelerate(0);
 
     }
+
 
     public int goldLocation(){
         int goldX = 0;
@@ -672,5 +680,12 @@ public class RobotProcessor {
         return goldAngle;
     }
 
-
+    public double distanceToWall(){
+        double ret;
+        ret = 47;
+        if (locationMineral == 1){
+         ret = 45;
+        }
+        return ret;
+    }
 }
