@@ -31,13 +31,13 @@ public class NewarkDepot extends LinearOpMode {
         telemetry.addData("location", proc.locationMineral);
 
         proc.descend();
-        proc.driveTrainProcessor.goAngle(2.5,0,.3);
-        proc.driveTrainProcessor.goAngle(2.5,90 ,.3);
+        proc.driveTrainProcessor.goAngle(2.5,0,.4);
+        proc.driveTrainProcessor.goAngle(2.5,90 ,.41);
         proc.turntoGold();
         proc.intakeProcessor.intakeOn();
         proc.driveTrainProcessor.goAngle(35,0,.5);
         proc.alignForSample();
-        proc.driveTrainProcessor.goAngle(30,0,.5);
+        proc.driveTrainProcessor.goAngle(proc.goToDep(),0,.5);
         proc.driveTrainProcessor.align(0);
         proc.intakeProcessor.intakeOff();
         proc.driveTrainProcessor.align(-90);
@@ -46,18 +46,16 @@ public class NewarkDepot extends LinearOpMode {
         proc.dropMarker();
 
         proc.driveTrainProcessor.align(-45);
-        proc.driveTrainProcessor.goAngleStall(17,90,.3);
-        proc.driveTrainProcessor.goAngleStall(2,-90,.3);
+        proc.driveTrainProcessor.goAngleStall(10,90,.3);
+        proc.driveTrainProcessor.goAngleStall(4,-90,1);
 
         proc.driveTrainProcessor.align(-45);
-        proc.driveTrainProcessor.goAngleStall(4,90,.3);
 
 
 
         proc.driveTrainProcessor.goAngleStall(20,180,1);
 
 
-        proc.driveTrainProcessor.goAngle(1,-90,1);
 
         proc.driveTrainProcessor.goAngle(45,180,1);
 
@@ -87,4 +85,6 @@ public class NewarkDepot extends LinearOpMode {
     //fpublic void kill(){
        // kill();
    // }
+
+
 }

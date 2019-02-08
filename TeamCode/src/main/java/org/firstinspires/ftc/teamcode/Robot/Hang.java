@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Hang {
+
+
     public DcMotor hangMotor;
 
     public Hang(HardwareMap hwMap, Mode mode) {

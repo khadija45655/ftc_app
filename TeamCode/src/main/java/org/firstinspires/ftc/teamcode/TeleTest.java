@@ -17,6 +17,9 @@ public class TeleTest extends OpMode {
     int count = 0;
     boolean up;
     boolean down;
+    double bucketPower = 0;
+    public static final int BUCKET_UP_POSITION = 1250;
+    public static final double RESTING_UP_POWER = -.2;
     ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -91,35 +94,44 @@ public class TeleTest extends OpMode {
         //telemetry.addData("limit2",bot.limit2.getVoltage());
         telemetry.update();
 
-        if(gamepad1.y){
+
+
+
+        if(gamepad1.a){
+
             up = true;
             down = false;
         }
-        if(gamepad1.a){
+        if(gamepad2.b){
+
             up = false;
             down = true;
-        }
-        if(gamepad1.b){
-            up = false;
-            down = false;
-            bot.bucketMotor.setPower(0);
 
         }
-        if(up&&bot.bucketMotor.getCurrentPosition()<850) {
-            bot.bucketMotor.setPower(.8);
+        if(gamepad2.y){
+
+            up = false;
+            down = false;
         }
-        if(down&&bot.bucketMotor.getCurrentPosition()>0){
-            bot.bucketMotor.setPower(-.8);
+        if(up) {
+            bucketPower = -1;
         }
-        if(bot.bucketMotor.getCurrentPosition()<0){
-            bot.bucketMotor.setPower(0);
+        if(down){
+            bucketPower = .5;
         }
-        if(gamepad1.left_bumper){
-            bot.bucketServo.setPosition(1);
+        if(!up&&bot.bucketMotor.getCurrentPosition()<0){
+            bucketPower = 0;
+            down = false;
+
+
         }
-        if(gamepad1.right_bumper){
-            bot.bucketServo.setPosition(0);
+        if(!down&&bot.bucketMotor.getCurrentPosition()>BUCKET_UP_POSITION){
+            bucketPower = RESTING_UP_POWER;
+            up = false;
+
         }
+        bot.bucketMotor.setPower(-bucketPower);
+
         if(gamepad1.right_trigger>0){
             bot.hangMotor.setPower(-gamepad1.right_trigger);
         }

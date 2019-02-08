@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Robot implements OpModeIF {
+
     public LinearOpMode currentOpMode = null;
     public Telemetry telemetry = null;
 

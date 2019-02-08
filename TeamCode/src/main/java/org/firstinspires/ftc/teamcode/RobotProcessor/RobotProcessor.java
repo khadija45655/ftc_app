@@ -67,7 +67,7 @@ public class RobotProcessor {
 
     public void descend() {
         int intialTicks = hangProcessor.hang.hangMotor.getCurrentPosition();
-        int target = -7000;
+        int target = -7100;
         //distance the hang needs to decend divided by the circumfrence multiplied by the pulses per rotation of a 60
         hangProcessor.hang.hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangProcessor.hang.hangMotor.setTargetPosition(target + intialTicks);
@@ -685,6 +685,14 @@ public class RobotProcessor {
         ret = 47;
         if (locationMineral == 1){
          ret = 45;
+        }
+        return ret;
+    }
+    public double goToDep(){
+        double ret;
+        ret = 30;
+        if (locationMineral == 2){
+            ret = 26;
         }
         return ret;
     }

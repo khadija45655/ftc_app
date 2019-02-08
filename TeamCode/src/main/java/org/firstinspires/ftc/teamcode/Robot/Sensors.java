@@ -4,6 +4,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -14,16 +16,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sensors {
+
+
     public BNO055IMU imu;
     public int cameraMonitorViewId;
     public VuforiaLocalizer vuforia;
     public TFObjectDetector tfod;
     public DistanceSensor limit1;
     public DistanceSensor limit2;
+
+    public AnalogInput ultrasonicLeft = null;
+    public AnalogInput ultrasonicRight = null;
+
+    public AnalogInput potentioMeter;
+    public AnalogInput flex = null;
+    public AnalogInput flex2 = null;
 
     public static final String VUFORIA_KEY = "AePFtGr/////AAABmTqOHBpjPkiDumePTFCRXhlueWd30Y4KQGm4uFHSsP2Rdhtlt2kMXLayBPRbBrX7VJLJfwVMqOYsTUjI63iVCna9oEOLQfRkvkNnj9npDzSzaf59ccQXUBGaO2Ga/lt2nX5mr4yJinI6S9qO43TCW4qURaoXFEjeohvQthjAPDpA13up2yKez6Kr0B+7hTTrETsW6UfSeijS7/ylQORuo02fc9IonaKvCPhvdjlINpDh85+M8bHx6KPCNHE1+v4jmNmGTYCLBwbHWb36j4uHHkMSBN51B6uec7J5A34/LKPUYYKwaKOmrzThbOiAEIu9oieG3zSmUx7enMWFox0pBu0jNOLezwLO5nj+/4JV/Rxx";
     public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
@@ -34,6 +46,12 @@ public class Sensors {
     public Sensors(HardwareMap hwMap,Mode mode){
         if(mode == Mode.Auto){
             imu = hwMap.get(BNO055IMU.class, "imu");
+
+            ultrasonicLeft = hwMap.analogInput.get("ultrasonicLeft");
+            ultrasonicRight = hwMap.analogInput.get("ultrasonicRight");
+
+            flex = hwMap.analogInput.get("flex");
+            flex2 = hwMap.analogInput.get("flex2");
             intializeImu();
 
             VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -45,6 +63,8 @@ public class Sensors {
             int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
                     "tfodMonitorViewId", "id", hwMap.appContext.getPackageName());
             initTfod(tfodMonitorViewId);
+
+
 
         }
         else {

@@ -20,6 +20,8 @@ public class Tele extends OpMode{
     boolean up;
     boolean down;
     boolean manualControl = false;
+    double intakePower;
+    boolean intakeMode;
     boolean bird;
     public static final int BUCKET_UP_POSITION = 1250;
     public static final double RESTING_UP_POWER = -.2;
@@ -131,6 +133,7 @@ public class Tele extends OpMode{
         telemetry.addData("bucketMotor",bot.bucketMotor.getPower());
         telemetry.addData("bucketMotor",bot.bucketMotor.getCurrentPosition());
         telemetry.addData("manual slide",manualControl);
+        telemetry.addData("intake mode",intakeMode);
 
 
         telemetry.addData("count",count);
@@ -145,66 +148,42 @@ public class Tele extends OpMode{
 
         if(gamepad2.a)
         {
-            bot.intakeMotor.setPower(-1);
+
+            if (intakeMode){
+                intakePower = -1;
+            }
+            if (!intakeMode){
+                intakePower = -.5;
+            }
         }
 
         if(gamepad2.b)
         {
-            bot.intakeMotor.setPower(0);
+            intakePower= 0;
         }
         if(gamepad2.y) {
-            bot.intakeMotor.setPower(1);
+
+            if (intakeMode){
+                intakePower = 1;
+            }
+            if (!intakeMode){
+                intakePower = .5;
+            }
         }
         if(gamepad2.x) {
-
-        }
-
-        //bucketPower = gamepad2.right_stick_y;
-        if(gamepad2.left_bumper){
-            manualControl = true;
-        }
-        if(gamepad2.right_bumper){
-            manualControl = false;
-
-        }
-
-        if(manualControl){
-            bucketPower = gamepad2.right_stick_y;
-        }
-
-        if(gamepad2.dpad_up&&(!manualControl)){
-
-            up = true;
-            down = false;
-        }
-        if(gamepad2.dpad_down&&(!manualControl)){
-
-            up = false;
-            down = true;
-
-        }
-        if(gamepad2.dpad_left&&(!manualControl)){
-
-            up = false;
-            down = false;
-        }
-        if(up&&!manualControl) {
-            bucketPower = -1;
-        }
-        if(down&&!manualControl){
-            bucketPower = .5;
-        }
-        if(!up&&bot.bucketMotor.getCurrentPosition()<0&&!manualControl){
-            bucketPower = 0;
-            down = false;
+            if (intakeMode){
+                intakeMode = false;
+            }
+            if (!intakeMode){
+                intakeMode = true;
+            }
 
 
         }
-        if(!down&&bot.bucketMotor.getCurrentPosition()>BUCKET_UP_POSITION&&!manualControl){
-            bucketPower = RESTING_UP_POWER;
-            up = false;
+        bot.intakeMotor.setPower(intakePower);
 
-        }
+        bucketPower = gamepad2.right_stick_y;
+
         bot.bucketMotor.setPower(-bucketPower);
 
         //triggers return -1.0 when up and 1.0 when down
@@ -218,11 +197,11 @@ public class Tele extends OpMode{
             bot.hangMotor.setPower(0);
         }
 
-        if(gamepad2.left_trigger>0){
-            bot.bucketServo.setPosition(1);
-        }
-        if(gamepad2.right_trigger>0){
+        if(gamepad2.dpad_down){
             bot.bucketServo.setPosition(0);
+        }
+        if(gamepad2.dpad_up){
+            bot.bucketServo.setPosition(1);
         }
         /*
         if(bot.limit1.getVoltage()>2||bot.limit2.getVoltage()>2&&runtime.milliseconds()>500){

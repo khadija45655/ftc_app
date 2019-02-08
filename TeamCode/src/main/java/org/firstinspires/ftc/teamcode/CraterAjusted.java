@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
 @Autonomous(name = "Crater", group = "tensor")
-public class NewarkCrater extends LinearOpMode {
+public class CraterAjusted extends LinearOpMode {
 
     /**
      * Override this method and place your code here.
@@ -42,20 +42,20 @@ public class NewarkCrater extends LinearOpMode {
 
 
         proc.driveTrainProcessor.goAngle(11,180,1);
-        proc.driveTrainProcessor.align(0);
+        proc.driveTrainProcessor.align(90);
         proc.intakeProcessor.intakeOff();
-        proc.driveTrainProcessor.align(-5);
+
 
         //strafe to wall
-        proc.driveTrainProcessor.goAngleStall(53,90,1);
+        proc.driveTrainProcessor.goAngleStall(53,0,1);
 
         //drive to depot
         proc.driveTrainProcessor.align(45);
         proc.driveTrainProcessor.goAngle(9,0,1);
         proc.driveTrainProcessor.align(45);
 
-        proc.driveTrainProcessor.goAngle(proc.distanceToWall(),90,1);
-        proc.driveTrainProcessor.align(0);
+        proc.driveTrainProcessor.goAngle(proc.distanceToWall(),0,1);
+
         proc.dropMarker();
         proc.driveTrainProcessor.goAngle(8, -90, 1);
         proc.driveTrainProcessor.goAngle(8,0,1);
