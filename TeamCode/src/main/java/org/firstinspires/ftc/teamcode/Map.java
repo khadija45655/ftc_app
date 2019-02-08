@@ -1,78 +1,120 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.database.sqlite.SQLiteDoneException;
+import android.graphics.ColorFilter;
+
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaRoverRuckus;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 /**
- * Created by khadija on 11/30/2018.
+ * Created by wolfie on 9/1/17.
  */
-public class Map {/*
+
+public class Map {
     public BNO055IMU imu;
     HardwareMap hwMap = null;
     public DcMotor motorLF;
     public DcMotor motorLB;
     public DcMotor motorRB;
     public DcMotor motorRF;
+    public DcMotor slideMotor;
+    public DcMotor leverMotorLeft;
+    public DcMotor leverMotorRight;
     public DcMotor hangMotor;
-    public DcMotor intakeMotor;
-    public DcMotor liftMotor;
-
-    public Servo bucketServo;
-    public Servo door;
-    public Servo marker;
-
-
-    //public AnalogInput ultrasonic = null;
-    //public AnalogInput potentioMeter;
-    /*public Camera logitech = null;
-    public Rev2mDistanceSensor prox = null;
-    public NavxMicroNavigationSensor Navx = null;*/
-
-
-//public WebcamName Logi;
-
-    /*public int cameraMonitorViewId;
-
-
-
-    VuforiaLocalizer vuforia;
-
-    ElapsedTime runtime = new ElapsedTime();
+    public VuforiaLocalizer vuforia;
+    public TFObjectDetector tfod;
+    public static final String VUFORIA_KEY = "AePFtGr/////AAABmTqOHBpjPkiDumePTFCRXhlueWd30Y4KQGm4uFHSsP2Rdhtlt2kMXLayBPRbBrX7VJLJfwVMqOYsTUjI63iVCna9oEOLQfRkvkNnj9npDzSzaf59ccQXUBGaO2Ga/lt2nX5mr4yJinI6S9qO43TCW4qURaoXFEjeohvQthjAPDpA13up2yKez6Kr0B+7hTTrETsW6UfSeijS7/ylQORuo02fc9IonaKvCPhvdjlINpDh85+M8bHx6KPCNHE1+v4jmNmGTYCLBwbHWb36j4uHHkMSBN51B6uec7J5A34/LKPUYYKwaKOmrzThbOiAEIu9oieG3zSmUx7enMWFox0pBu0jNOLezwLO5nj+/4JV/Rxx";
+    public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    public static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    public static final String LABEL_SILVER_MINERAL = "Silver Mineral";
 
 
     public void init(HardwareMap ahwMap) {
         // save reference to HW Map
         hwMap = ahwMap;
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        motorLF = hwMap.dcMotor.get("motorLF");
         motorLB = hwMap.dcMotor.get("motorLB");
-        motorRB = hwMap.dcMotor.get("motorRB");
+        motorLF = hwMap.dcMotor.get("motorLF");
         motorRF = hwMap.dcMotor.get("motorRF");
-        liftMotor = hwMap.dcMotor.get("liftMotor");
+        motorRB = hwMap.dcMotor.get("motorRB");
+        slideMotor = hwMap.dcMotor.get("slideMotor");
+        leverMotorLeft = hwMap.dcMotor.get("leverMotorLeft");
+        leverMotorRight = hwMap.dcMotor.get("leverMotorRight");
+
         hangMotor = hwMap.dcMotor.get("hangMotor");
-        intakeMotor = hwMap.dcMotor.get("intakeMotor");
 
 
-        //door = hwMap.servo.get("door");
-        bucketServo = hwMap.servo.get("bucketServo");
-        marker = hwMap.servo.get("marker");
+        imu = hwMap.get(BNO055IMU.class, "imu");
 
-        VuforiaLocalizer.Parameters vuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+            /*ultrasonicLeft = hwMap.analogInput.get("ultrasonicLeft");
+            ultrasonicRight = hwMap.analogInput.get("ultrasonicRight");
+
+            flex = hwMap.analogInput.get("flex");
+            flex2 = hwMap.analogInput.get("flex2");*/
+        intializeImu();
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hwMap.get(WebcamName.class, "Webcam 1");
+        initializeVuforia(parameters);
+
+        int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hwMap.appContext.getPackageName());
+        initTfod(tfodMonitorViewId);
 
 
+        motorLF.setDirection(DcMotor.Direction.FORWARD);
+        motorRB.setDirection(DcMotor.Direction.FORWARD);
+        motorRF.setDirection(DcMotor.Direction.FORWARD);
+        motorLB.setDirection(DcMotor.Direction.FORWARD);
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
+
+
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorRB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        motorLB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+
+    public void intializeImu(){
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -82,78 +124,26 @@ public class Map {/*
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu.initialize(parameters);
+    }
 
-        //colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
-        //colorSensor2 = hwMap.get(ColorSensor.class, "colorSensor2");
-        //ultrasonic = hwMap.get(AnalogInput.class, "ultrasonicLeft");
+    //may not work with acccessiblity of the method variables
+    //modifies vuforia class object ?
+    public void initializeVuforia(VuforiaLocalizer.Parameters vuforiaParameters){
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
 
-        //potentioMeter = hwMap.analogInput.get("potentioMeter");
-        //talk to partner and change crater penetration angle with potentiometer
-
-        cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        vuforiaParameters.cameraName.getCameraCharacteristics();
-
-
-        motorLF.setDirection(DcMotor.Direction.FORWARD);
-        motorLB.setDirection(DcMotor.Direction.FORWARD);
-        motorRF.setDirection(DcMotor.Direction.FORWARD);
-        motorRB.setDirection(DcMotor.Direction.FORWARD);
-        hangMotor.setDirection(DcMotor.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
-        liftMotor.setDirection(DcMotor.Direction.FORWARD);
-
-
-
-        vuforiaParameters.vuforiaLicenseKey = "AfbM7ND/////AAAAGUXqRoQRDEkKupX0Zkdd3WhqVs68pW5fggxtJc7rlwOAI1WWfs5J4APPWl3FElqMVRdxwlDg3Rcx2DycCogRQGhyOZ6Gakktkgk22k/vy9q8OGLvDvGQQf6zOW3Qrs4hkn2qDWA4r5pDz3W8Aoh97+RCVTiVstECpe1mp97YGrYc5EeyW68aml6lirGr43motonPrXChztqG/3WpqYfFRFIsc+g+leI/ihWuAA1ZUFDYQjRV94GRl66w31kHcGtm+j2BKUlcQsVPmhizh+396O5r4yGkTcLBAZxyuyGm+lerwPJ9DWrkCiwVOtnCVqLUkfAoAjpuXuXEtW4JTlwqYmKVTuVDIg4Wcm7c8vLEBV/4";
-
-        vuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
-
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         vuforia = ClassFactory.getInstance().createVuforia(vuforiaParameters);
 
-        // Load the data sets that for the trackable objects. These particular data
-        // sets are stored in the 'assets' part of our application.
-        VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
-        VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("Blue-Rover");
-        VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("Red-Footprint");
-        VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("Front-Craters");
-        VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
 
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        /*List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(targetsRoverRuckus);
+    public void initTfod(int tfodMonitorViewId) {
 
-        hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-        motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-    }*/
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
 }

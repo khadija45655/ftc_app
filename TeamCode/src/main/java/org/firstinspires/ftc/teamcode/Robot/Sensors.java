@@ -47,11 +47,11 @@ public class Sensors {
         if(mode == Mode.Auto){
             imu = hwMap.get(BNO055IMU.class, "imu");
 
-            ultrasonicLeft = hwMap.analogInput.get("ultrasonicLeft");
+            /*ultrasonicLeft = hwMap.analogInput.get("ultrasonicLeft");
             ultrasonicRight = hwMap.analogInput.get("ultrasonicRight");
 
             flex = hwMap.analogInput.get("flex");
-            flex2 = hwMap.analogInput.get("flex2");
+            flex2 = hwMap.analogInput.get("flex2");*/
             intializeImu();
 
             VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
