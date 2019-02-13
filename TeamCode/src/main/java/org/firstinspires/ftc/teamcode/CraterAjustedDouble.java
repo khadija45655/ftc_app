@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "Crater adjusted", group = "tensor")
-public class CraterAjusted extends LinearOpMode {
+@Autonomous(name = "Crater adjusted double", group = "tensor")
+public class CraterAjustedDouble extends LinearOpMode {
 
     /**
      * Override this method and place your code here.
@@ -47,7 +47,7 @@ public class CraterAjusted extends LinearOpMode {
 
 
         //strafe to wall
-        proc.driveTrainProcessor.goAngleStall(30,0,1);
+        proc.driveTrainProcessor.goAngleStall(33,0,1);
         proc.driveTrainProcessor.align(-45);
 
         proc.driveTrainProcessor.goAngleStall(16,90,1);
@@ -60,20 +60,34 @@ public class CraterAjusted extends LinearOpMode {
 
         proc.dropMarker();
 
+        proc.driveTrainProcessor.goAngle(2,0,1);
+
+        proc.driveTrainProcessor.goAngle(6,-90,1);
+
+
+
+        proc.driveTrainProcessor.align(-90);
+        //identify seconf particle
+        proc.intakeProcessor.intakeOn();
+        proc.alignFor2ndSample();
+        //push off particle
+
+
+        proc.driveTrainProcessor.goAngle(30,0,1);
+        proc.driveTrainProcessor.goAngle(25,180,1);
+        proc.intakeProcessor.intakeOff();
 
         proc.driveTrainProcessor.align(-45);
 
 
 
-        proc.driveTrainProcessor.goAngle(5,90,1);
+        proc.driveTrainProcessor.goAngle(8,90,1);
 
 
         proc.driveTrainProcessor.goAngle(45,0,1);
 
         proc.driveTrainProcessor.goAngle(4,90,1);
         proc.driveTrainProcessor.goAngle(25,0,1);
-
-
 
 
 

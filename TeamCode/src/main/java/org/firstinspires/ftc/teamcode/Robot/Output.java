@@ -4,12 +4,16 @@ import com.qualcomm.robotcore.hardware.*;
 
 public class Output {
     public DcMotor bucketMotor;
-    public Servo bucketServo;
+    public Servo bucketServo1;
+    public Servo bucketServo2;
+
     public Servo marker;
 
     public Output(HardwareMap hwMap, Mode mode){
         bucketMotor = hwMap.dcMotor.get("bucketMotor");
-        bucketServo = hwMap.servo.get("bucketServo");
+        bucketServo1 = hwMap.servo.get("bucketServo1");
+        bucketServo2 = hwMap.servo.get("bucketServo2");
+
         marker = hwMap.servo.get("marker");
 
         bucketMotor.setDirection(DcMotor.Direction.FORWARD);

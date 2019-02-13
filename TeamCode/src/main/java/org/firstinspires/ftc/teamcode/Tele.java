@@ -180,6 +180,12 @@ public class Tele extends OpMode{
 
 
         }
+
+        if(gamepad2.right_stick_button) {
+            bot.bucketServo1.setPosition(0);
+            bot.bucketServo2.setPosition(0);
+        }
+
         bot.intakeMotor.setPower(intakePower);
 
         bucketPower = gamepad2.right_stick_y;
@@ -198,10 +204,12 @@ public class Tele extends OpMode{
         }
 
         if(gamepad2.dpad_down){
-            bot.bucketServo.setPosition(0);
+            bot.bucketServo1.setPosition(0);
+            bot.bucketServo2.setPosition(0);
         }
         if(gamepad2.dpad_up){
-            bot.bucketServo.setPosition(1);
+            bot.bucketServo1.setPosition(1);
+            bot.bucketServo2.setPosition(1);
         }
         /*
         if(bot.limit1.getVoltage()>2||bot.limit2.getVoltage()>2&&runtime.milliseconds()>500){

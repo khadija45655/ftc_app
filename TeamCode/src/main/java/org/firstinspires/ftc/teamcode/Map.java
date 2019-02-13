@@ -40,8 +40,8 @@ public class Map {
     public DcMotor motorRB;
     public DcMotor motorRF;
     public DcMotor slideMotor;
-    public DcMotor leverMotorLeft;
-    public DcMotor leverMotorRight;
+    public DcMotor leverArmLeft;
+    public DcMotor leverArmRight;
     public DcMotor hangMotor;
     public VuforiaLocalizer vuforia;
     public TFObjectDetector tfod;
@@ -59,8 +59,8 @@ public class Map {
         motorRF = hwMap.dcMotor.get("motorRF");
         motorRB = hwMap.dcMotor.get("motorRB");
         slideMotor = hwMap.dcMotor.get("slideMotor");
-        leverMotorLeft = hwMap.dcMotor.get("leverMotorLeft");
-        leverMotorRight = hwMap.dcMotor.get("leverMotorRight");
+        leverArmLeft = hwMap.dcMotor.get("leverArmLeft");
+        leverArmRight = hwMap.dcMotor.get("leverArmRight");
 
         hangMotor = hwMap.dcMotor.get("hangMotor");
 
@@ -77,7 +77,7 @@ public class Map {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hwMap.get(WebcamName.class, "Webcam 1");
+        //parameters.cameraName = hwMap.get(WebcamName.class, "Webcam 1");
         initializeVuforia(parameters);
 
         int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
@@ -103,6 +103,8 @@ public class Map {
         motorRB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leverArmRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leverArmLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorLB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

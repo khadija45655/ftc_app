@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "NewarkDepot", group = "tensor")
+@Autonomous(name = "Depot Adjusted", group = "tensor")
 public class DepotAdjusted extends LinearOpMode {
 
     /**
@@ -38,29 +38,30 @@ public class DepotAdjusted extends LinearOpMode {
         proc.driveTrainProcessor.goAngle(35,0,.5);
         proc.alignForSample();
         proc.driveTrainProcessor.goAngle(proc.goToDep(),0,.5);
-        proc.driveTrainProcessor.align(0);
+        proc.driveTrainProcessor.align(180);
         proc.intakeProcessor.intakeOff();
-        proc.driveTrainProcessor.align(-90);
 
 
         proc.dropMarker();
 
-        proc.driveTrainProcessor.align(-45);
-        proc.driveTrainProcessor.goAngleStall(10,90,.3);
-        proc.driveTrainProcessor.goAngleStall(4,-90,1);
-
-        proc.driveTrainProcessor.align(-45);
+        proc.driveTrainProcessor.goAngle(7,180,.5);
+        proc.driveTrainProcessor.goAngle(5,0,.5);
 
 
-
-        proc.driveTrainProcessor.goAngleStall(20,180,1);
-
+        proc.driveTrainProcessor.align(135);
 
 
-        proc.driveTrainProcessor.goAngle(45,180,1);
+        proc.driveTrainProcessor.goAngle(11,-90,1);
 
-        proc.driveTrainProcessor.goAngle(9,90,1);
-        proc.driveTrainProcessor.goAngle(50,180,1);
+
+        proc.driveTrainProcessor.goAngleStall(40,0,1);
+
+
+
+
+
+        proc.driveTrainProcessor.goAngle(4,-90,1);
+        proc.driveTrainProcessor.goAngle(60,0,1);
 
 
 

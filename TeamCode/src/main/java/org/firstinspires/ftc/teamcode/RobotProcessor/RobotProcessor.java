@@ -406,7 +406,7 @@ public class RobotProcessor {
 
 
 
-        while(!bot.opModeIsActive()) {
+        while(!bot.opModeIsActive()&&!bot.currentOpMode.isStopRequested()) {
             if (bot.sensors.tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -682,7 +682,7 @@ public class RobotProcessor {
 
     public double distanceToWall(){
         double ret;
-        ret = 47;
+        ret = 55;
         if (locationMineral == 1){
          ret = 45;
         }
@@ -690,9 +690,9 @@ public class RobotProcessor {
     }
     public double goToDep(){
         double ret;
-        ret = 30;
+        ret = 27;
         if (locationMineral == 2){
-            ret = 26;
+            ret = 23;
         }
         return ret;
     }

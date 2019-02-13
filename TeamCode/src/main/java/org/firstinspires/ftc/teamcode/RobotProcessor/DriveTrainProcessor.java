@@ -245,7 +245,7 @@ public class DriveTrainProcessor {
         stopBotMotors();
         telemetry.addData("path reached", sensors.imu.getAngularOrientation());
         telemetry.update();
-        currentOpmode.sleep(100);
+        currentOpmode.sleep(50);
         enterEnc();
     }
     public void goAngleStall(double dist, double angle, double power) {
@@ -301,7 +301,7 @@ public class DriveTrainProcessor {
         stopBotMotors();
         telemetry.addData("path reached", sensors.imu.getAngularOrientation());
         telemetry.update();
-        currentOpmode.sleep(200);
+        currentOpmode.sleep(20);
         enterEnc();
     }
 
@@ -378,7 +378,7 @@ public class DriveTrainProcessor {
         stopBotMotors();
         telemetry.addData("path reached", sensors.imu.getAngularOrientation());
         telemetry.update();
-        currentOpmode.sleep(100);
+        currentOpmode.sleep(20);
         enterEnc();
     }
     public void strafeRightInches(double power, double inches){
@@ -423,7 +423,7 @@ public class DriveTrainProcessor {
         stopBotMotors();
         telemetry.addData("path reached", sensors.imu.getAngularOrientation());
         telemetry.update();
-        currentOpmode.sleep(100);
+        currentOpmode.sleep(20);
         enterEnc();
     }
 }
