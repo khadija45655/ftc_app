@@ -23,6 +23,7 @@ public class DepotAdjusted extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
+        proc.bot.output.marker.setPosition(1);
 
         proc.displayINIT();
         waitForStart();

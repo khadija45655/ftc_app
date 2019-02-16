@@ -23,6 +23,8 @@ public class CraterAjusted extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
+        proc.bot.output.marker.setPosition(1);
+        sleep(300);
 
         proc.displayINIT();
 
@@ -47,7 +49,7 @@ public class CraterAjusted extends LinearOpMode {
 
 
         //strafe to wall
-        proc.driveTrainProcessor.goAngleStall(30,0,1);
+        proc.driveTrainProcessor.goAngleStall(proc.distanceStrafe(),0,1);
         proc.driveTrainProcessor.align(-45);
 
         proc.driveTrainProcessor.goAngleStall(16,90,1);
@@ -69,9 +71,10 @@ public class CraterAjusted extends LinearOpMode {
 
 
         proc.driveTrainProcessor.goAngle(45,0,1);
+        proc.driveTrainProcessor.align(-45);
 
         proc.driveTrainProcessor.goAngle(4,90,1);
-        proc.driveTrainProcessor.goAngle(25,0,1);
+        proc.driveTrainProcessor.goAngle(30,0,1);
 
 
 

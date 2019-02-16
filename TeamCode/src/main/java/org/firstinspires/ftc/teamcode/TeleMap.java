@@ -69,7 +69,7 @@ public class TeleMap {
 
         bucketMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        hangMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         motorLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

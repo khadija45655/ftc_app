@@ -36,6 +36,8 @@ public class Sensors {
     public AnalogInput potentioMeter;
     public AnalogInput flex = null;
     public AnalogInput flex2 = null;
+    //public AnalogInput wallSensor = null;
+
 
     public static final String VUFORIA_KEY = "AePFtGr/////AAABmTqOHBpjPkiDumePTFCRXhlueWd30Y4KQGm4uFHSsP2Rdhtlt2kMXLayBPRbBrX7VJLJfwVMqOYsTUjI63iVCna9oEOLQfRkvkNnj9npDzSzaf59ccQXUBGaO2Ga/lt2nX5mr4yJinI6S9qO43TCW4qURaoXFEjeohvQthjAPDpA13up2yKez6Kr0B+7hTTrETsW6UfSeijS7/ylQORuo02fc9IonaKvCPhvdjlINpDh85+M8bHx6KPCNHE1+v4jmNmGTYCLBwbHWb36j4uHHkMSBN51B6uec7J5A34/LKPUYYKwaKOmrzThbOiAEIu9oieG3zSmUx7enMWFox0pBu0jNOLezwLO5nj+/4JV/Rxx";
     public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
@@ -53,7 +55,7 @@ public class Sensors {
             flex = hwMap.analogInput.get("flex");
             flex2 = hwMap.analogInput.get("flex2");*/
             intializeImu();
-
+            //wallSensor = hwMap.analogInput.get("wallSensor");
             VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
             parameters.vuforiaLicenseKey = VUFORIA_KEY;

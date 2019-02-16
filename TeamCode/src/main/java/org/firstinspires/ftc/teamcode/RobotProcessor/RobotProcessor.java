@@ -682,10 +682,15 @@ public class RobotProcessor {
 
     public double distanceToWall(){
         double ret;
-        ret = 55;
+        ret = 45;
         if (locationMineral == 1){
-         ret = 45;
+         ret = 44;
         }
+        else if(locationMineral == 3){
+            ret = 48;
+        }
+
+
         return ret;
     }
     public double goToDep(){
@@ -693,6 +698,19 @@ public class RobotProcessor {
         ret = 27;
         if (locationMineral == 2){
             ret = 23;
+        }
+        return ret;
+    }
+    public double distanceStrafe(){
+        double ret;
+        if (locationMineral == 1){
+            ret = 27;
+        }
+        else if(locationMineral == 2 ){
+            ret = 30;
+        }
+        else{
+            ret = 33;
         }
         return ret;
     }
