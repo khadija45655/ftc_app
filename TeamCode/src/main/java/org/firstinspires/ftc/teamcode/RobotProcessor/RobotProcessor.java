@@ -201,7 +201,7 @@ public class RobotProcessor {
                         bot.telemetry.update();
                     }
                 }
-                if(runTime.milliseconds()>5000){
+                if(runTime.milliseconds()>1000){
                     locationMineral = 2;
                 }
             }
@@ -212,6 +212,66 @@ public class RobotProcessor {
         }
     }
 
+    public void identifyLocationV3() {
+
+        if (bot.opModeIsActive()) {
+            /* Activate Tensor Flow Object Detection. */
+            if (bot.sensors.tfod != null) {
+                bot.sensors.tfod.activate();
+            }
+            runTime.reset();
+            while (locationMineral == -1&&/*runTime.milliseconds()<5000&&*/bot.opModeIsActive()) {
+                if (bot.sensors.tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = bot.sensors.tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        bot.telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                        int goldMineralX = -1000;
+                        int silverMineral1X = -1;
+                        int silverMineral2X = -1;
+
+                        for (Recognition recognition : updatedRecognitions) {
+                            if(recognition.getTop()<150){
+                                //ignore
+                                bot.telemetry.addData("nah","fam");
+                            }
+                            else if (recognition.getLabel().equals(bot.sensors.LABEL_GOLD_MINERAL)) {
+                                goldMineralX = (int) recognition.getLeft();
+                                bot.telemetry.addData("gold boi","fam");
+
+                            }
+                        }
+
+
+                        if(goldMineralX!=-1000&& goldMineralX>-100&&goldMineralX<=250)
+                        {
+                            locationMineral = 1;
+                        }
+                        if(goldMineralX!=-1000&& goldMineralX>251&&goldMineralX<=450)
+                        {
+                            locationMineral = 2;
+                        }
+                        if(goldMineralX!=-1000&& goldMineralX>451)
+                        {
+                            locationMineral = 3;
+                        }
+                        bot.telemetry.addData("yote","yeet");
+
+                        bot.telemetry.update();
+                    }
+                }
+                if(runTime.milliseconds()>1000){
+                    locationMineral = 2;
+                }
+            }
+        }
+
+        if (bot.sensors.tfod != null) {
+            bot.sensors.tfod.shutdown();
+        }
+    }
     public void turntoGold(){
         if(locationMineral==1)
         {
@@ -713,5 +773,119 @@ public class RobotProcessor {
             ret = 33;
         }
         return ret;
+    }
+
+    public void goArc(double distance,double frontAngle, double turnAngle,double power) {
+        driveTrainProcessor.resetEnc();
+        driveTrainProcessor.enterEnc();
+
+        /*
+        Drives the robot in an arc, by driving two separate arcs using two pairs of wheels. One pair drives the outer arc,
+        and the other drives the inner arc. Powering the outer wheels faster than the inner wheels the creates the desired arc.
+        */
+
+        double turnAngel = Math.toRadians(turnAngle);
+        double radius = (distance/2)/Math.sin(Math.abs(turnAngel)/2);
+
+        //compute how many rotations to move desired distance
+        double rotations = distance / (driveTrainProcessor.OMNI_WHEEL_CIRCUMFERENCE);
+
+        //the angle on the robot that is considered the front, in radians
+        double frontAngel = Math.toRadians(frontAngle);
+
+        //extract the sine and cosine of the frontAngle
+        double xFront = Math.cos(frontAngel);
+        double yFront = Math.sin(frontAngel);
+
+        //find the ratio between the radius of the outer and inner circles, each 9 inches from the center of the robot
+        double ratio = (radius - 9) / (radius + 9);
+
+        int expRF = (int) Math.signum((yFront - xFront) * turnAngle) >>> 31;
+        int expLF = (int) Math.signum((-yFront - xFront) * turnAngle) >>> 31;
+        int expLB = (int) Math.signum((-yFront + xFront) * turnAngle) >>> 31;
+        int expRB = (int) Math.signum((yFront + xFront) * turnAngle) >>> 31;
+
+        double powerRF = power * Math.pow(ratio, expRF) * Math.signum(yFront - xFront);
+        double powerLF = power * Math.pow(ratio, expLF) * Math.signum(-yFront - xFront);
+        double powerLB = power * Math.pow(ratio, expLB) * Math.signum(-yFront + xFront);
+        double powerRB = power * Math.pow(ratio, expRB) * Math.signum(yFront + xFront);
+
+        //sets up the PID turn`
+        Orientation ref = bot.sensors.imu.getAngularOrientation();
+        double heading = ref.firstAngle;
+        double angleWanted = turnAngle + heading;
+        double integral = 0;
+        double previous_error = 0;
+        double rcw = 1;
+
+        //combines the tick condition with a gyroscopic sensor condition to ensure accuracy
+        while (rcw !=0 && bot.opModeIsActive()) {
+
+            ref = bot.sensors.imu.getAngularOrientation();
+
+            double firstAngle = ref.firstAngle;
+            if(ref.firstAngle<0&&turnAngle>0){
+                firstAngle = 360 + ref.firstAngle;
+            }
+            if(ref.firstAngle>0&&turnAngle<0){
+                firstAngle = -360+ ref.firstAngle;
+            }
+
+            double error = Math.abs(angleWanted) - Math.abs(firstAngle);
+
+            double derivative = error - previous_error;
+            //small margin of error for increased speed
+            if (Math.abs(error) < 3) {
+                error = 0;
+            }
+            //prevents integral from growing too large
+            if (Math.abs(error) < ANTI_WINDUP && error != 0) {
+                integral += error;
+            } else {
+                integral = 0;
+            }
+            if (integral > (50 / driveTrainProcessor.I_TURN_COEFF)) {
+                integral = 50 / driveTrainProcessor.I_TURN_COEFF;
+            }
+            if (error == 0) {
+                derivative = 0;
+            }
+            previous_error = error;
+            integral=0;
+            derivative=0;
+            rcw = driveTrainProcessor.P_TURN_COEFF * error + driveTrainProcessor.I_TURN_COEFF*integral + driveTrainProcessor.D_TURN_COEFF * derivative;
+            //sets the power, which, due to the exponents, is either the ratio or 1. User can change power factor for lower rcws.
+            bot.driveTrain.motorRF.setPower(powerRF * rcw);
+            bot.driveTrain.motorLF.setPower(powerLF * rcw);
+            bot.driveTrain.motorLB.setPower(powerLB * rcw);
+            bot.driveTrain.motorRB.setPower(powerRB * rcw);
+
+            bot.telemetry.addData("Path2", "Running at %7d :%7d",
+                    bot.driveTrain.motorLB.getCurrentPosition(),
+                    bot.driveTrain.motorLF.getCurrentPosition(),
+                    bot.driveTrain.motorRB.getCurrentPosition(),
+                    bot.driveTrain.motorRF.getCurrentPosition());
+            bot.telemetry.addData("target", "Running at %7d :%7d",
+                    bot.driveTrain.motorLB.getTargetPosition(),
+                    bot.driveTrain.motorLF.getTargetPosition(),
+                    bot.driveTrain.motorRB.getTargetPosition(),
+                    bot.driveTrain.motorRF.getTargetPosition());
+            bot.telemetry.addData("first angle", firstAngle);
+            bot.telemetry.addData("second angle", ref.secondAngle);
+            bot.telemetry.addData("third angle", ref.thirdAngle);
+            bot.telemetry.addData("target", turnAngle);
+            bot.telemetry.addData("error", angleWanted - ref.firstAngle);
+            bot.telemetry.addData("angleWanted", angleWanted);
+            bot.telemetry.addData("motor power", bot.driveTrain.motorLF.getPower());
+            bot.telemetry.addData("rcw", rcw);
+            bot.telemetry.addData("P", driveTrainProcessor.P_TURN_COEFF * error);
+            bot.telemetry.addData("I", driveTrainProcessor.I_TURN_COEFF * integral);
+            bot.telemetry.addData("D", driveTrainProcessor.D_TURN_COEFF * derivative);
+            bot.telemetry.update();
+
+            bot.currentOpMode.sleep(20);
+        }
+        driveTrainProcessor.stopBotMotors();
+        driveTrainProcessor.enterEnc();
     }
 }

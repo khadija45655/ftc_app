@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,10 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "Drive1", group = "tensor")
-public class Drive1 extends LinearOpMode {
-
-    RobotProcessor proc = new RobotProcessor();
+@Autonomous(name = "IdenifyV3", group = "tensor")
+public class IdenifyV3 extends LinearOpMode {
 
     /**
      * Override this method and place your code here.
@@ -24,13 +22,21 @@ public class Drive1 extends LinearOpMode {
      */
     @Override
     public void runOpMode() throws InterruptedException {
-        proc.bot.initBot(this,hardwareMap,Mode.Auto,telemetry);
-        proc.initProc();
+        RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
+
+        proc.displayINIT();
+
         waitForStart();
 
 
-        proc.driveTrainProcessor.goAngle(12,0,1);
-        proc.driveTrainProcessor.goAngle(12,180,1);
+        waitForStart();
+
+        proc.identifyLocationV3();
+        while(opModeIsActive()){
+            telemetry.addData("location mineral", proc.locationMineral);
+            telemetry.update();
+
+        }
 
     }
 }

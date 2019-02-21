@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Robot.Mode;
-import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
+import org.firstinspires.ftc.teamcode.Robot.Mode;
 
-@Autonomous(name = "Crater adjusted", group = "tensor")
-public class CraterAjusted extends LinearOpMode {
+/**
+ * Created by khadija on 2/16/2019.
+ */
+@Autonomous(name = "Auto scoring", group = "tensor")
+public class AutoScoring extends LinearOpMode {
 
     /**
      * Override this method and place your code here.
@@ -20,10 +20,27 @@ public class CraterAjusted extends LinearOpMode {
      *
      * @throws InterruptedException
      */
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
-        proc.bot.output.marker.setPosition(1);
+
+
+        if (isStopRequested()) {
+            return;
+        }
+
+
+
+        while (opModeIsActive()){
+            while (!isStopRequested()){
+
+
+            }
+        }
+        proc.bot.output.marker.setPosition(.5);
+
         sleep(300);
 
         proc.displayINIT();
@@ -35,11 +52,11 @@ public class CraterAjusted extends LinearOpMode {
         proc.descend();
         proc.driveTrainProcessor.goAngle(2.5,0,1);
         proc.driveTrainProcessor.goAngle(2.5,90 ,1);
+        proc.intakeProcessor.intakeOn();
 
         // turn to gold mineral
         proc.turntoGold();
         // hit gold mineral
-        proc.intakeProcessor.intakeOn();
         proc.driveTrainProcessor.goAngle(27,0,1);
 
 

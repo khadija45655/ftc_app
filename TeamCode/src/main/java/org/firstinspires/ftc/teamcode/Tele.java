@@ -17,11 +17,8 @@ public class Tele extends OpMode{
     double bucketPower = 0;
     int count = 0;
     boolean flipped;
-    boolean up;
-    boolean down;
-    boolean manualControl = false;
+
     double intakePower;
-    boolean intakeMode;
     boolean bird;
     public static final int BUCKET_UP_POSITION = 1250;
     public static final double RESTING_UP_POWER = -.2;
@@ -132,8 +129,7 @@ public class Tele extends OpMode{
         telemetry.addData("motorRB",bot.motorRB.getPower());
         telemetry.addData("bucketMotor",bot.bucketMotor.getPower());
         telemetry.addData("bucketMotor",bot.bucketMotor.getCurrentPosition());
-        telemetry.addData("manual slide",manualControl);
-        telemetry.addData("intake mode",intakeMode);
+
 
 
         telemetry.addData("count",count);
@@ -149,12 +145,10 @@ public class Tele extends OpMode{
         if(gamepad2.a)
         {
 
-            if (intakeMode){
+
                 intakePower = -1;
-            }
-            if (!intakeMode){
-                intakePower = -.5;
-            }
+
+
         }
 
         if(gamepad2.b)
@@ -163,23 +157,12 @@ public class Tele extends OpMode{
         }
         if(gamepad2.y) {
 
-            if (intakeMode){
+
                 intakePower = 1;
-            }
-            if (!intakeMode){
-                intakePower = .5;
-            }
-        }
-        if(gamepad2.x) {
-            if (intakeMode){
-                intakeMode = false;
-            }
-            if (!intakeMode){
-                intakeMode = true;
-            }
 
 
         }
+
 
         if(gamepad2.right_stick_button) {
             bot.bucketServo1.setPosition(0);
@@ -211,16 +194,7 @@ public class Tele extends OpMode{
             bot.bucketServo1.setPosition(1);
             bot.bucketServo2.setPosition(1);
         }
-        /*
-        if(bot.limit1.getVoltage()>2||bot.limit2.getVoltage()>2&&runtime.milliseconds()>500){
-            count++;
-            runtime.reset();
-        }
-        if(count > 1){
-            bot.intakeMotor.setPower(1);
-            count=0;
-        }
-        */
+
     }
 
 

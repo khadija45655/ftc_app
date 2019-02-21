@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Robot.Mode;
-import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
+import org.firstinspires.ftc.teamcode.Robot.Mode;
 
-@Autonomous(name = "Crater", group = "tensor")
-public class NewarkCrater extends LinearOpMode {
+/**
+ * Created by khadija on 2/16/2019.
+ */
+@Autonomous(name = "Crater adjusted", group = "tensor")
+public class CraterAdjusted extends LinearOpMode {
 
     /**
      * Override this method and place your code here.
@@ -20,9 +20,28 @@ public class NewarkCrater extends LinearOpMode {
      *
      * @throws InterruptedException
      */
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
+
+
+        if (isStopRequested()) {
+            return;
+        }
+
+
+
+        while (opModeIsActive()){
+            while (!isStopRequested()){
+
+
+            }
+        }
+        proc.bot.output.marker.setPosition(.5);
+
+        sleep(300);
 
         proc.displayINIT();
 
@@ -38,38 +57,42 @@ public class NewarkCrater extends LinearOpMode {
         proc.turntoGold();
         // hit gold mineral
         proc.intakeProcessor.intakeOn();
-        proc.driveTrainProcessor.goAngle(23,0,1);
+        proc.driveTrainProcessor.goAngle(27,0,1);
 
 
-        proc.driveTrainProcessor.goAngle(11,180,1);
-        proc.driveTrainProcessor.align(0);
+        proc.driveTrainProcessor.goAngle(12,180,1);
+        proc.driveTrainProcessor.align(90);
         proc.intakeProcessor.intakeOff();
-        proc.driveTrainProcessor.align(-5);
+
 
         //strafe to wall
-        proc.driveTrainProcessor.goAngleStall(53,90,1);
+        proc.driveTrainProcessor.goAngleStall(proc.distanceStrafe(),0,1);
+        proc.driveTrainProcessor.align(-45);
+
+        proc.driveTrainProcessor.goAngleStall(16,90,1);
 
         //drive to depot
-        proc.driveTrainProcessor.align(45);
-        proc.driveTrainProcessor.goAngle(9,0,1);
-        proc.driveTrainProcessor.align(45);
+        proc.driveTrainProcessor.align(-45);
 
-        proc.driveTrainProcessor.goAngle(proc.distanceToWall(),90,1);
-        proc.driveTrainProcessor.align(0);
+
+        proc.driveTrainProcessor.goAngle(proc.distanceToWall(),180,1);
+
         proc.dropMarker();
-        proc.driveTrainProcessor.goAngle(8, -90, 1);
-        proc.driveTrainProcessor.goAngle(8,0,1);
+
+
         proc.driveTrainProcessor.align(-45);
 
 
 
-        proc.driveTrainProcessor.goAngle(7,90,1);
+        proc.driveTrainProcessor.goAngle(5,90,1);
 
 
         proc.driveTrainProcessor.goAngle(45,0,1);
+        proc.driveTrainProcessor.align(-45);
 
-        proc.driveTrainProcessor.goAngle(9,90,1);
-        proc.driveTrainProcessor.goAngle(25,0,1);
+        proc.driveTrainProcessor.goAngle(4,90,1);
+        proc.driveTrainProcessor.goAngle(30,0,1);
+
 
 
 

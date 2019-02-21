@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "Turn2", group = "tensor")
-public class Turn2 extends LinearOpMode {
+@Autonomous(name = "Turn4", group = "tensor")
+public class Turn4 extends LinearOpMode {
 
     RobotProcessor proc = new RobotProcessor();
 
@@ -28,7 +28,7 @@ public class Turn2 extends LinearOpMode {
         proc.initProc();
         waitForStart();
 
-        proc.driveTrainProcessor.turn(90,.025,0.05,.02);
+        proc.driveTrainProcessor.turn(90,.025,0.031,.04);
 
 
     }

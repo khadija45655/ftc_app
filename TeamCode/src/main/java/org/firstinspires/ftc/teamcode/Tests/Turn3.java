@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,8 +9,10 @@ import org.firstinspires.ftc.teamcode.Robot.Mode;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.RobotProcessor.RobotProcessor;
 
-@Autonomous(name = "identify", group = "tensor")
-public class identify extends LinearOpMode {
+@Autonomous(name = "Turn3", group = "tensor")
+public class Turn3 extends LinearOpMode {
+
+    RobotProcessor proc = new RobotProcessor();
 
     /**
      * Override this method and place your code here.
@@ -22,16 +24,12 @@ public class identify extends LinearOpMode {
      */
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
-
-        proc.displayINIT();
-
+        proc.bot.initBot(this,hardwareMap,Mode.Auto,telemetry);
+        proc.initProc();
         waitForStart();
 
+        proc.driveTrainProcessor.turn(90,.025,0.04,.03);
 
-        waitForStart();
-
-        proc.identifyLocationV2();
 
     }
 }
