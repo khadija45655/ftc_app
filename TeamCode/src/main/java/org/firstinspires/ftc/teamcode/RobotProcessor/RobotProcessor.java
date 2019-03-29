@@ -67,7 +67,7 @@ public class RobotProcessor {
 
     public void descend() {
         int intialTicks = hangProcessor.hang.hangMotor.getCurrentPosition();
-        int target = -7100;
+        int target = -7200;
         //distance the hang needs to decend divided by the circumfrence multiplied by the pulses per rotation of a 60
         hangProcessor.hang.hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangProcessor.hang.hangMotor.setTargetPosition(target + intialTicks);
@@ -145,7 +145,7 @@ public class RobotProcessor {
         }
     }
 
-    public void identifyLocationV2() {
+    public void identifyLocationV3() {
 
         if (bot.opModeIsActive()) {
             /* Activate Tensor Flow Object Detection. */
@@ -212,7 +212,7 @@ public class RobotProcessor {
         }
     }
 
-    public void identifyLocationV3() {
+    public void identifyLocationV2() {
 
         if (bot.opModeIsActive()) {
             /* Activate Tensor Flow Object Detection. */
@@ -233,7 +233,7 @@ public class RobotProcessor {
                         int silverMineral2X = -1;
 
                         for (Recognition recognition : updatedRecognitions) {
-                            if(recognition.getTop()<150){
+                            if(recognition.getTop()<250){
                                 //ignore
                                 bot.telemetry.addData("nah","fam");
                             }
@@ -287,6 +287,20 @@ public class RobotProcessor {
         }
     }
 
+    public void turntoGoldDepot(){
+        if(locationMineral==1)
+        {
+            driveTrainProcessor.align(32);
+        }
+        else if (locationMineral==3)
+        {
+            driveTrainProcessor.align(-32);
+        }
+        else
+        {
+            driveTrainProcessor.align(0);
+        }
+    }
     public void alignForSample(){
         if(locationMineral==1)
         {
@@ -747,7 +761,7 @@ public class RobotProcessor {
          ret = 44;
         }
         else if(locationMineral == 3){
-            ret = 48;
+            ret = 46;
         }
 
 
@@ -770,7 +784,7 @@ public class RobotProcessor {
             ret = 30;
         }
         else{
-            ret = 33;
+            ret = 38;
         }
         return ret;
     }

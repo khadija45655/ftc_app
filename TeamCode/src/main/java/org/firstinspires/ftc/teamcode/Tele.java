@@ -173,7 +173,8 @@ public class Tele extends OpMode{
 
         bucketPower = gamepad2.right_stick_y;
 
-        bot.bucketMotor.setPower(-bucketPower);
+
+        bot.bucketMotor.setPower(bucketPower);
 
         //triggers return -1.0 when up and 1.0 when down
         if(gamepad1.right_trigger>0){
@@ -194,6 +195,22 @@ public class Tele extends OpMode{
             bot.bucketServo1.setPosition(1);
             bot.bucketServo2.setPosition(1);
         }
+        if(gamepad2.dpad_left)
+        {
+            bot.bucketServo2.setPosition(1);
+        }
+        if(gamepad2.dpad_right)
+        {
+            bot.bucketServo1.setPosition(1);
+        }
+        if(gamepad2.left_bumper){
+            bot.marker.setPosition(0);
+
+        }
+        if(gamepad2.right_bumper){
+            bot.marker.setPosition(.5);
+        }
+
 
     }
 

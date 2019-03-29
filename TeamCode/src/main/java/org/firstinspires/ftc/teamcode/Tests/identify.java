@@ -31,9 +31,11 @@ public class identify extends LinearOpMode {
 
         waitForStart();
 
-        proc.identifyLocation();
+        proc.identifyLocationV2();
         while(opModeIsActive()){
             telemetry.addData("location mineral", proc.locationMineral);
+            telemetry.update();
+
 
         }
 

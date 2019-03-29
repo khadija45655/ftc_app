@@ -23,18 +23,18 @@ public class DepotAdjusted extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         RobotProcessor proc = new RobotProcessor(this,hardwareMap,Mode.Auto,telemetry);
-        proc.bot.output.marker.setPosition(.5);
+        proc.bot.output.marker.setPosition(.55);
 
         proc.displayINIT();
         waitForStart();
 
-        proc.identifyLocation();
+        proc.identifyLocationV2();
         telemetry.addData("location", proc.locationMineral);
 
         proc.descend();
         proc.driveTrainProcessor.goAngle(2.5,0,.4);
         proc.driveTrainProcessor.goAngle(2.5,90 ,.41);
-        proc.turntoGold();
+        proc.turntoGoldDepot();
         proc.intakeProcessor.intakeOn();
         proc.driveTrainProcessor.goAngle(35,0,.5);
         proc.alignForSample();
@@ -62,7 +62,7 @@ public class DepotAdjusted extends LinearOpMode {
 
 
         proc.driveTrainProcessor.goAngle(4,-90,1);
-        proc.driveTrainProcessor.goAngle(60,0,1);
+        proc.driveTrainProcessor.goAngle(55,0,1);
 
 
 

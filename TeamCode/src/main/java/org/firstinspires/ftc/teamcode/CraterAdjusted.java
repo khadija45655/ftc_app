@@ -39,7 +39,7 @@ public class CraterAdjusted extends LinearOpMode {
 
             }
         }
-        proc.bot.output.marker.setPosition(.5);
+        proc.bot.output.marker.setPosition(.55);
 
         sleep(300);
 
@@ -60,7 +60,7 @@ public class CraterAdjusted extends LinearOpMode {
         proc.driveTrainProcessor.goAngle(27,0,1);
 
 
-        proc.driveTrainProcessor.goAngle(12,180,1);
+        proc.driveTrainProcessor.goAngle(11.5,180,1);
         proc.driveTrainProcessor.align(90);
         proc.intakeProcessor.intakeOff();
 
@@ -69,7 +69,7 @@ public class CraterAdjusted extends LinearOpMode {
         proc.driveTrainProcessor.goAngleStall(proc.distanceStrafe(),0,1);
         proc.driveTrainProcessor.align(-45);
 
-        proc.driveTrainProcessor.goAngleStall(16,90,1);
+        proc.driveTrainProcessor.goAngleStall(17,90,1);
 
         //drive to depot
         proc.driveTrainProcessor.align(-45);
@@ -91,7 +91,7 @@ public class CraterAdjusted extends LinearOpMode {
         proc.driveTrainProcessor.align(-45);
 
         proc.driveTrainProcessor.goAngle(4,90,1);
-        proc.driveTrainProcessor.goAngle(30,0,1);
+        proc.driveTrainProcessor.goAngle(45,0,1);
 
 
 
